@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<link>
+    <meta charset="UTF-8">
+    <title>用户管理页面</title>
+
+    <script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/tripledes.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/mode-ecb.js}"></script>
+
+    <script type="text/javascript" th:src="@{/static/js/index.js}"></script>
+</head>
+<body>
+<h1 th:text="${test}">Hello SpringBoot  </h1>
+<table cellspacing="1" cellpadding="1">
+    <tr>
+        <td> 姓名</td>
+        <td> 性别</td>
+        <td> 年龄</td>
+    </tr>
+    <tr th:each="user:${userList}">
+        <td th:text=" ${user.userName}" th:name="${user.userName}">6</td>
+        <td th:text=" ${user.userSex.sexName}"></td>
+        <td th:text=" ${user.userAge}"> 6</td>
+    </tr>
+</table>
+
+<span style="color:blue;" th:text="*{test}"></span>
+
+<span style="color:blue;" th:utext="*{test}"></span>
+
+<a th:href="*{url}" target="_blank">百度一下</a>
+
+<form th:action="@{/edit}" th:object="${user}" method="post">
+    <input type="hidden" th:field="*{userId}">
+    <label>姓名：</label><input th:field="*{userName}"></br>
+    <label>性别：</label>
+    <select th:name="userSex">
+        <option th:selected="*{userSex.sexCode == 0 } " value="0">男</option>
+        <option th:selected="*{userSex.sexCode == 1 } " value="1">女</option>
+    </select></br>
+    <label>年龄：</label><input th:field="*{userAge}">
+    <input type="submit" value="修改">
+</form>
+
+<form th:action="@{addUser}" th:object="${userNew}" method="post">
+    <label>姓名：</label><input th:field="*{userName}"></br>
+    <label>性别：</label>
+    <select th:name="userSex">
+        <option th:selected="*{userSex.sexCode == 0 } " value="0">男</option>
+        <option th:selected="*{userSex.sexCode == 1 } " value="1">女</option>
+    </select></br>
+    <label>年龄：</label><input th:field="*{userAge}">
+    <input type="submit" value="添加">
+</form>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}">
+    <link rel="stylesheet" th:href="@{/static/css/laydate.css}" media="all" type="text/css">
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <title>广告投放投资</title>
+    <script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/highcharts.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/laydate.js}"></script>
+</head>
+<body>
+<div id="navigation">
+    <div class="container-fluid"><a href="#" id="brand"></a>
+        <ul class="main-nav">
+            <li><a th:href="@{/user/index}" > <i class="icon-home"></i> <span>我的首页</span><span class="caret"></span></a></li>
+            <li><a th:href="@{/pm/index}">
+                <i class="icon-edit"></i> <span>计划管理</span><span class="caret"></span></a></li>
+            <li><a th:href="@{/am/index}"> <i class="icon-edit"></i> <span>广告管理</span><span class="caret"></span></a></li>
+            <li><a th:href="@{/user/acountSetting}"> <i class="icon-edit"></i><span>帐户设置</span><span class="caret"></span></a></li>
+            <!--<li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>审批申请</span> <span class="caret"></span> </a></li>
+            <li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>消息中心</span> <span class="caret"></span> </a></li>-->
+            <li class="active"><a href="javascript:;"> <i class="icon-table"></i><span>效果报告</span></a></li>
+        </ul>
+        <div class="user">
+            <ul class="icon-nav">
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:20px;"
+                       th:text="${currentUser.userName}"></a>
+                </li>
+                <i class="icon-exit"></i>
+                <li class="dropdown" title="退出"><a th:href="@{/user/loginout}"> <i class="icon-exit"></i> </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" id="content">
+
+
+    <div id="left">
+        <div class="subnav">
+            <div class="subnav-title"><a href="#" class="toggle-subnav"><i class="icon-angle-down"></i><span>效果报告</span></a>
+            </div>
+            <!--<ul class="subnav-menu">
+                <li class="current"><a href="javascript:;">综合报告(当天)</a></li>
+                <li><a href="javascript:;">综合报告(一周)</a></li>
+                <li><a href="javascript:;">综合报告(一月)</a></li>
+            </ul>-->
+        </div>
+    </div>
+    <div id="main" style="padding-top:1px">
+        <!--<div class="alert alert-error" style="margin-top:10px"> 哇哦！没有当天数据 </div>-->
+        <div class="box" style="min-height: 70px;">
+            <div class="box-title" style="height:76px;">
+                <div style="font-size:0px; "> 数据报告</div>
+                <div class="button" style="float:left">
+                    <button class="btn btn-primary defaul_report">设置为默认报告</button>
+                    <span class="report_view_type"><strong>数据显示</strong>：
+        <label>
+          <input name="report_view_type" type="radio" value="all" checked="">
+          汇总报告</label>
+          </span></div>
+                <div class="report_menu">
+                    <div class="laydate-box">
+                        <input type="text" class="laydateInput startTime" placeholder="xxxx年xx月xx日" code-flag="start"/>
+                        <img th:src="@{/static/images/calendar.png}" alt="" class="icon data-icon" code-flag="start"/>
+                        <span>至</span>
+                        <input type="text" class="laydateInput endTime" placeholder="xxxx年xx月xx日" code-flag="end"/>
+                        <img th:src="@{/static/images/calendar.png}" alt="" class="icon data-icon" code-flag="end"/>
+                        <div class="select-date">
+                            <div class="select-date-header">
+                                <ul class="heade-ul">
+                                    <li class="header-item header-item-one">
+                                        <select name="" id="yearList"></select>
+                                    </li>
+                                    <li class="header-item header-item-two" onselectstart="return false" style="width: 50px;">
+                                        <select name="" id="monthList"></select>
+                                    </li>
+                                    <li class="header-item header-item-three" onselectstart="return false">
+                                        <span class="reback">回到今天</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="select-date-body">
+                                <ul class="week-list">
+                                    <li>日</li>
+                                    <li>一</li>
+                                    <li>二</li>
+                                    <li>三</li>
+                                    <li>四</li>
+                                    <li>五</li>
+                                    <li>六</li>
+                                </ul>
+                                <ul class="day-tabel"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="report_menu_right" style="margin-right: 290px;">
+                    <button class="search" id="search">查询</button>
+                </div>
+
+                <div class="report_menu_right" style="margin-right: -140px;" th:if="${currentUser.isSuperadmin == 1}">
+                    <button class="search" id="setUseMoney">设置消耗值</button>
+                </div>
+            </div>
+        </div>
+        <div class="box-content">
+            <div id="container" style="margin-top:40px; height:430px;" data-highcharts-chart="0">
+
+            </div>
+            <div class="fold"><a href="javascript:void(0);" id="fold_close"></a></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline = "javascript">
+    //相对路径
+    var path = /*[[@{/}]]*/;
+    $(function(){
+        layui.use("layer", function () {
+            var layer = layui.layer;  //layer初始化
+        });
+        initCharts();
+    });
+    function initCharts() {
+        var start = $(".startTime").val().replace(/\s/g,"","");
+        var end = $(".endTime").val().replace(/\s/g,"","");
+        var formats='%Y-%m-%d';
+        var interval = 24*3600*1000;
+        var title = {
+            text: '金额消费统计'
+        };
+
+        var xAxis = {
+            categories: [],
+            title: {
+                text: '时间',
+                style: {
+                    color: '#4572A7'
+                }
+            },
+            type: 'datetime',
+            minTickInterval: interval,//间隔值
+            labels: {
+                formatter: function () {
+                    return Highcharts.dateFormat(formats,this.value);
+                },
+                rotation:30,//倾斜30度，防止数量过多显示不全
+            }
+        };
+        var yAxis = {
+            title: {
+                text: '金额(money)'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        };
+
+        var tooltip = {
+            valueSuffix: '元' //单位
+        }
+
+        var legend = {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        };
+
+        var series =  [
+            {}
+        ];
+
+        var json = {};
+
+        json.title = title;
+        json.xAxis = xAxis;
+        json.yAxis = yAxis;
+        json.tooltip = tooltip;
+        json.legend = legend;
+
+        //临时处理jsessionid问题
+        var hasJs = path.split(";");
+        if(hasJs){
+            path = hasJs[0];
+        }
+
+        $.ajax({
+            url:path+"xgbg/dataStatistics",
+            type:"post",
+            data:{
+                "startTime":start,
+                "endTime":end
+            },
+            dataType:"json",
+            success:function (res) {
+                console.log(res);
+                var datastr = new Array();
+                var datestr = new Array();
+                for(var i=0; i<res.Data.length;i++){
+                    datastr[i] = res.Data[i].totalMoney;
+                    datestr[i] = res.Data[i].spendDate;
+                }
+                xAxis.categories = datestr;
+                series[0].data = datastr;
+                series[0].name = "金额";
+                json.series = series;
+                $('#container').show().highcharts(json);
+            }
+        });
+    }
+
+    function compareDate () {
+        var sta = $(".startTime").val().replace(/\s+/g,"").split("-");
+        var end = $(".endTime").val().replace(/\s+/g,"").split("-");
+        sta = new Date(sta[0],sta[1]-1,sta[2]);
+        end = new Date(end[0],end[1]-1,end[2]);
+        if ((sta && !end) || (!sta && end)) {
+            layer.msg("开始时间和结束时间不能为空",{icon:2,time:1000});
+            return false;
+        }
+        if (sta > end) {
+            layer.msg("开始时间不能大于结束时间",{icon:2,time:1000});
+            return false;
+        }
+        return true;
+    };
+
+    $('#search').on('click', function () {
+        if(compareDate()){
+            initCharts();
+        }
+    });
+    
+    $("#setUseMoney").on('click',function () {
+        layer.open({
+            title:"设置消耗金额",
+            type: 2,
+            area: ['623px', '484px'],  //弹出层页面比例
+            content:'setUserMoney'
+        })
+    })
+
+    $('.defaul_report').on('click', function (option) {
+        var url = "/index.php?e=adv/report.set_defaul_report&type=all";
+        $.get(url);
+        alert("设置成功");
+    });
+
+</script>
+</div>
+</body>
+</html>

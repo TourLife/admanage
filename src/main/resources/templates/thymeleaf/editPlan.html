@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<link rel="stylesheet" th:href="@{/static/css/style.css}">
+<link rel="stylesheet" th:href="@{/static/css/edit/edit.css}">
+<link type="text/css" th:href="@{/static/css/edit/iconfont.css}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/static/css/edit/build_plan.css}">
+<!--<link rel="stylesheet" th:href="@{/static/css/edit/jquery.ui.all.css}">
+<link rel="stylesheet" th:href="@{/static/css/edit/common.css}">
+<link rel="stylesheet" th:href="@{/static/css/edit/admin_2016.css}">
+-->
+<script th:src="@{/static/js/jquery-1.10.2.js}" type="text/javascript"></script>
+<script th:src="@{/static/js/jquery.ui.core.js}" type="text/javascript"></script>
+<script th:src="@{/static/js/jquery.ui.widget.js}" type="text/javascript"></script>
+
+<script th:src="@{/static/js/homead.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.validate.js}"></script>
+<!--<link rel="stylesheet" th:href="@{/static/css/edit/style.css}">
+<link rel="stylesheet" th:href="@{/static/css/edit/build_plan.css}">-->
+</head>
+<body>
+
+<div id="navigation">
+    <div class="container-fluid">
+        <a href="#" id="brand"></a>
+        <ul class="main-nav">
+            <li><a th:href="@{/user/index}"> <i class="icon-home"></i> <span>我的首页</span><span class="caret"></span> </a></li>
+            <li class="active"><a href="JavaScript:;" data-toggle="dropdown" class="dropdown-toggle">
+                <i class="icon-edit"></i> <span>计划管理</span> <span class="caret"></span> </a></li>
+            <li><a th:href="@{/am/index}" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>广告管理</span> <span class="caret"></span> </a></li>
+            <li><a th:href="@{/user/acountSetting}" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>帐户设置</span> <span class="caret"></span> </a></li>
+            <!--<li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>审批申请</span> <span class="caret"></span> </a></li>
+            <li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>消息中心</span> <span class="caret"></span> </a></li>-->
+            <li><a th:href="@{/xgbg/index}"
+                   data-toggle="dropdown" class="dropdown-toggle"> <i class="icon-table"></i> <span>效果报告</span> <span
+                    class="caret"></span> </a></li>
+        </ul>
+        <div class="user">
+            <ul class="icon-nav">
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:20px;"
+                       th:text="${userName}"></a>
+                </li>
+                <i class="icon-exit"></i>
+                <li class="dropdown" title="退出"><a th:href="@{/user/loginout}"> <i class="icon-exit"></i> </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    <div class="container-fluid" id="content">
+        <div id="left">
+            <div class="subnav">
+                <div class="subnav-title"><a href="#" class="toggle-subnav"><i class="icon-angle-down"></i><span>计费模式</span></a>
+                </div>
+                <ul class="subnav-menu">
+                    <li class="current"><a href="/index.php?e=adv/plan.get_list"><i class="icon-6uc-allplan"></i>
+                        <span>所有计划</span></a></li>
+                    <li><a href="/index.php?e=adv/plan.get_list&amp;plantype=cpc"><i class="icon-6uc-anyplan"></i> <span>CPC类</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="main" style="padding-top:10px">
+            <div class="bread_crumbs">
+                <p><i class="iconfont icon-shouye-copy-copy-copy"></i>当前位置：广告平台后台 &gt; 发布广告计划</p>
+                    <div class="con-con">
+                        <form action="http://mianrenbai.com/index.php?e=adv/plan.create_post" method="POST"
+                              enctype="multipart/form-data" name="form_b" class="form-horizontal z-form" id="form_b">
+                            <h2></h2>
+                            <div class="z-choice">
+                                <div class="z-basic active">基本信息编辑</div>
+                                <!--<div class="z-direction">定向设置</div>-->
+                            </div>
+                            <input name="planid" id="planid" type="hidden" value="">
+                            <input name="olb_price" id="olb_price" type="hidden" value="">
+                            <div class="box">
+                                <div class="z-basic-a">
+                                    <div class="box-content" style="position:relative">
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                                               class="zone_form controls">
+                                            <tbody>
+                                            <tr>
+                                                <td width="200">计划名称</td>
+                                                <td><input type="text" name="planname" id="planname" class="input-27"
+                                                           placeholder="不超过20个字" value=""></td>
+                                            </tr>
+                                            <tr>
+                                                <td>计费模式</td>
+                                                <td>
+                                                    <select name="plantype" id="plantype" style="padding:5px;">
+                                                        style="padding:5px; width:160px" &gt;
+                                                        <option value="cpc">&nbsp;CPC&nbsp;</option>
+                                                    </select></td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td>结算周期</td>
+                                                <td><select name="clearing" style="padding:5px;">
+                                                    <option value="day">日结项目</option>
+                                                </select>
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td>计划广告分类</td>
+                                                <td>
+                                                    <select name="classid" style="padding:5px;">
+                                                        <option th:each="planType,iterStat : ${planTypeList}" th:value="${planType.typeCode}"
+                                                                th:text="${planType.typeName}"></option>
+                                                    </select>
+
+                                                </td>
+                                            </tr>
+                                            <tr id="price_d">
+                                                <td width="200" id="price_text5">广告出价</td>
+                                                <td><input name="priceadv" type="text" class="input-27" id="priceadv"
+                                                           placeholder="每一次有效点击的付费金额，填写不小于0.2" value="">
+                                                    <span id="price_text4"> 元</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>每日预算</td>
+                                                <td><input name="budget" type="text" class="input-27" id="budget"
+                                                           placeholder="每天的消费金额上限,不填则不限，填写则必须高于100" value="">
+                                                    元 <span class="helpsp"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>价格说明</td>
+                                                <td><input name="priceinfo" type="text" class="input-27" id="priceinfo"
+                                                           placeholder="广告计费简要说明" value="">
+                                                    <span class="helpsp"></span></td>
+                                            </tr>
+
+                                            <tr class="zone_form controls">
+                                                <td width="200">结束日期</td>
+                                                <td>
+                                                    <select name="expire_year" id="expire_year" disabled="disabled">
+                                                    <option value="2019" selected="">2019年</option>
+                                                    </select>
+                                                    <select name="expire_month" id="expire_month" disabled="disabled">
+                                                        <option value="10" selected="">10月</option>
+                                                    </select>
+                                                    <select name="expire_day" id="expire_day" disabled="disabled">
+                                                        <option value="4" selected="">4日</option>
+                                                    </select>（注：投放截止日期为前一日24:00）<!--提示用户截止时间(尚)--></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="z-next">
+                                    <a href="javascript:;">提交</a>
+                                </div>
+                        </form>
+
+
+                        <script language="JavaScript" type="text/javascript">
+
+                            $(document).ready(function () {
+                                do_c($('#plantype').val());
+                                add_plan_vlt.init();
+                                $(".z-next a").click(function () {
+                                    $(this).parent().css("display", "none");
+                                    $(".z-basic-a").addClass("hide");
+                                    $(".z-direction-a").removeClass("hide");
+                                    $(".z-choice div").removeClass("active");
+                                    $(".z-choice .z-direction").addClass("active");
+                                    $(".form-actions").css("display", "block");
+                                })
+                                $(".z-prev").click(function () {
+                                    $(this).parent().css("display", "none");
+                                    $(".z-basic-a").removeClass("hide");
+                                    $(".z-direction-a").addClass("hide");
+                                    $(".z-choice div").removeClass("active");
+                                    $(".z-choice .z-basic").addClass("active");
+                                    $(".form-actions").css("display", "none");
+                                    $(".z-next").css("display", "block");
+                                })
+
+                            });
+
+
+                            $(document).ready(function () {
+                                do_c($('#plantype').val());
+                                add_plan_vlt.init();
+
+
+                            });
+
+                            $('input:radio[name=expire_date]').on('click', function (option) {
+                                var v = $(this).val();
+                                if (v == 'no') {
+                                    $("#expire_year,#expire_month,#expire_day").removeAttr("disabled");
+                                } else {
+                                    $("#expire_year,#expire_month,#expire_day").attr("disabled", "disabled");
+                                }
+                            });
+
+                            $('input:radio[name="acl[city][isacl]"],input:radio[name="acl[keyword][isacl]"],input:radio[name="acl[carrier][isacl]"],input:radio[name="acl[siteclass][isacl]"],input:radio[name="acl[week][isacl]"],input:radio[name="acl[browser][isacl]"],input:radio[name="acl[mobile][isacl]"],input:radio[name="acl[site][isacl]"]').on('click', function (option) {
+                                var v = $(this).val();
+                                if (v == 'all') {
+                                    $(this).next().next().next().next().hide();
+                                    $(this).next().next().next().hide();
+                                } else {
+                                    $(this).next().next().show();
+                                    $(this).next().next().next().show();
+                                }
+                                add_plan_vlt.init();
+                            });
+                            $(".region >div").bind('mouseover', function () {
+                                if ($(this).next(".p_city").find('li').length > 2) {
+                                    var v = $(this).find('input').val();
+                                    $(this).addClass("hover");
+                                    position = $(this).position();
+                                    poptop = position.top;
+                                    popleft = position.left + 66;
+                                    $(this).next().show().css("top", poptop + "px").css("left", popleft + "px");
+                                }
+
+                            }).bind('mouseleave', function () {
+                                $(this).next().hide();
+                                $(this).removeClass("hover");
+                            });
+                            $(".region >div").next().bind('mouseover', function () {
+                                $(this).prev().addClass("hover");
+                                $(this).show();
+                            }).bind('mouseleave', function () {
+                                $(this).hide();
+                                $(this).prev().removeClass("hover");
+                            });
+
+                            $(".region >div>input").click(function () {
+
+                                var a = $(this).attr("checked");
+                                a = !a ? false : true;
+                                $(this).parent().next().find(':input').each(function () {
+
+                                    $(this).attr("checked", a);
+                                });
+                            });
+
+
+                            $(".week_in").click(function () {
+                                var a = $(this).attr("checked");
+                                a = !a ? false : true;
+
+                                if ($(this).parent().parent().parent().find(".week_in:checked").length >= 1) {
+                                    a = true;
+                                } else {
+                                    a = false;
+                                }
+
+                                $(this).parent().parent().parent().find("input:first").attr("checked", a);
+                            });
+
+
+                            $(".city_in").click(function () {
+                                var a = $(this).attr("checked");
+                                a = !a ? false : true;
+                                var v = $(this).attr("id");
+                                id = v.split('_');
+
+                                if ($(".city_in:checked").length >= 1) {
+                                    a = true;
+                                } else {
+                                    a = false;
+                                }
+
+                                $("#province_" + id[1]).attr("checked", a);
+                            });
+
+
+                            $(".week").click(function () {
+                                var a = $(this).attr("checked");
+                                a = !a ? false : true;
+
+
+                                $(this).parent().parent().parent().find(':input:gt(0)').each(function () {
+                                    $(this).attr("checked", a);
+                                });
+                            });
+
+
+                            $('input:radio[name="linkon"]').on('click', function (option) {
+                                var v = $(this).val();
+                                if (v == 'y') {
+                                    $("#linkurl_s").show();
+                                } else {
+                                    $("#linkurl_s").hide();
+                                }
+
+                            });
+
+
+                            $('#plantype').on('change', function (option) {
+                                var v = $(this).val();
+
+                                do_c(v)
+
+                            });
+
+
+                            $('input:radio[name=gradeprice]').on('click', function (option) {
+                                var v = $(this).val();
+                                if (v == 0) {
+                                    $('#classprice_d').hide("");
+                                    $('#price_d').show("");
+                                } else if (v == 1) {
+                                    $('#classprice_d').show("");
+                                    $('#price_d').hide("");
+                                } else {
+                                    $('#classprice_d').hide("");
+                                    $('#price_d').hide("");
+                                }
+
+                                add_plan_vlt.init();
+                            });
+
+
+                            function do_c(v) {
+
+                                $('.keys').hide("");
+                                $('.table_cps').hide("");
+                                if (v == "cps" || v == "cpa") {
+                                    $('.keys').show("");
+                                }
+
+                                if (v == "cps") {
+                                    $('#price_text1').html("固定分成");
+                                    $('#price_text2').html("按类目分成");
+                                    $('#price_text5').html("佣金分成");
+                                    $('#price_text3,#price_text4').html(" %");
+                                    $('.table_cps').show("");
+                                    $('#gradeprice_d').show("");
+                                    //$('#classprice_d').show("");
+
+                                    //$('#price_d').hide("");
+
+                                } else {
+                                    $('#price_text1').html("不分等级");
+                                    $('#price_text2').html("分网站等级");
+                                    $('#price_text5').html("广告出价");
+                                    $('#price_text3,#price_text4').html(" 元");
+                                    $('.table_cps').hide("");
+                                    $('#s_price_f_cps').hide("");
+                                    $('#gradeprice_d').hide("");
+                                    $('#classprice_d').hide("");
+                                    //$('#price_d').show("");
+                                }
+
+                            }
+
+                            add_plan_vlt = {
+                                init: function () {
+                                    jQuery.validator.addMethod("SmallSize", function (value, element, params) {
+                                        var pv = parseFloat($(params).val());
+                                        if (!pv)
+                                            pv = 0;
+                                        return parseFloat(value) <= pv;
+                                    }, "test值");
+                                    jQuery.validator.addMethod("LargeSize", function (value, element, params) {
+                                        var pv = parseFloat($(params).val());
+                                        if (!pv)
+                                            pv = 0;
+                                        return parseFloat(value) >= pv;
+                                    }, "test值");
+
+                                    form_roles_validator = $("#form_b").validate({
+                                        errorClass: "error",
+                                        highlight: function (element) {
+                                            $(element).closest('td').addClass("f_error");
+                                        },
+                                        unhighlight: function (element) {
+                                            $(element).closest('td').removeClass("f_error");
+                                        },
+                                        rules: {
+                                            uid: {required: true},
+                                            planname: {
+                                                required: true
+                                            }
+                                            , classid: {
+                                                required: true
+                                            },
+                                            'pkey': {
+                                                required: true
+                                            },
+                                            'datatime': {
+                                                required: true
+                                            },
+                                            'cookie': {
+                                                required: true
+                                            },
+                                            linkurl: {
+                                                required: "#linkurl:checked",
+                                            },
+                                            'acl[city][province][]': {
+                                                required: "#acl0isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[class][data][]': {
+                                                required: "#acl1isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[week][data][]': {
+                                                required: "#acl2isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[browser][data][]': {
+                                                required: "#acl3isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[mobile][data][]': {
+                                                required: "#acl4isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[adview_type][data]': {
+                                                required: "#acl9isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[keyword][data]': {
+                                                required: "#acl5isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[carrier][data][]': {
+                                                required: "#acl6isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[age][data]': {
+                                                required: "#acl7isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'acl[site][data]': {
+                                                required: "#acl8isacl:checked",
+                                                minlength: 1
+                                            },
+                                            'classprice_mark[]': {
+                                                required: "#gradeprice:checked",
+                                                minlength: 1
+                                            },
+                                            'classprice_mark_info[]': {
+                                                required: "#gradeprice:checked",
+                                                minlength: 1
+                                            },
+                                            'classprice_adv[]': {
+                                                required: "#gradeprice:checked",
+                                                minlength: 1,
+                                                number: true
+                                            },
+                                            priceadv: {
+                                                required: true,
+                                                number: true,
+                                                min: 0.0000001
+                                            },
+                                            budget: {
+                                                required: true,
+                                                digits: true
+                                            }
+
+                                        },
+                                        messages: {
+                                            uid: "选择一个广告商",
+                                            planname: "请正确填写",
+                                            classid: "选择一个活动分类",
+                                            'pkey': "接口密钥不能为空",
+                                            'datatime': "请正确填写",
+                                            'cookie': "请正确填写",
+                                            'linkurl': "请正确填写",
+                                            'acl[city][province][]': "需要选择一个城市",
+                                            'acl[keyword][data]': "需要填写关键词",
+                                            'acl[age][data]': "需要选择年龄段",
+                                            'acl[site][data]': "需要填写站点",
+                                            'acl[class][data][]': "需要选择一个网站类型",
+                                            'acl[week][data][]': "需要选择一个日程",
+                                            'acl[browser][data][]': "需要选择一个浏览器",
+                                            'acl[carrier][data][]': "需要选择一个运营商",
+                                            'acl[mobile][data][]': "需要选择一个操作系统",
+                                            'acl[adview_type][data]': "需要选择一个流量类型",
+                                            'classprice_mark[]': "",
+                                            'classprice_mark_info[]': "",
+                                            'classprice_aff[]': "",
+                                            priceadv: {required: "请正确填写", number: "填写一个整数或是小数", min: "单价值太小了吧"},
+                                            budget: "请正确填写一个整数",
+                                        },
+                                        errorElement: 'span',
+                                        errorPlacement: function (error, element) {
+                                            if (element.is(':input')) {
+                                                var eid = element.attr('name');
+                                                if (eid == "acl[city][province][]")
+                                                    $('#city_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[class][data][]")
+                                                    $('#class_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[week][data][]")
+                                                    $('#week_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[adview_type][data]")
+                                                    $('#adview_type_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[browser][data][]")
+                                                    $('#browser_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[mobile][data][]")
+                                                    $('#mobile_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[carrier][data][]")
+                                                    $('#carrier_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[keyword][data]")
+                                                    $('#keyword_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[age][data]")
+                                                    $('#age_data_error').html(error).addClass("frc_error");
+                                                if (eid == "acl[site][data]")
+                                                    $('#site_data_error').html(error).addClass("frc_error");
+                                            } else {
+                                                error.insertAfter(element);
+                                            }
+                                        }
+                                    });
+
+                                }
+                            };
+
+                            $(".newbtn").bind("click", function () {
+                                //alert($("input:checked"));
+                                $(".c_f_f").append(
+                                    '<tr><td><div><input name="classprice_mark[]" type="text" class="input_text span30 classprice {validate:{ required:true,email:true }}" style="width:90px" value="" /></div></td><td><div><input name="classprice_mark_info[]" type="text" class="input_text span30 classprice" style="width:120px" value="" /></div></td> <td><div><input name="classprice_adv[]" type="text" class="input_text span30 classprice" style="width:50px" value="" /> %</div></td><td><div><input name="classprice_memo[]" type="text" class="input_text span30 classprice" style="width:110px" value="" /><a href="javascript:;" class="delbtn"> 删</a></div> </td></tr>');
+
+                                $(".delbtn").bind("click", function () {
+                                    $(this).parent().parent().parent().remove();
+                                    add_plan_vlt.init();
+                                });
+                                add_plan_vlt.init();
+                            });
+
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

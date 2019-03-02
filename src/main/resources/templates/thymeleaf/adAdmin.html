@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<title>广告主后台</title>
+<link rel="stylesheet" th:href="@{/static/css/style.css}">
+<link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+<script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+<script type="application/javascript" th:src="@{/static/js/adAdmin.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //相对路径
+    var path = /*[[@{/}]]*/;
+</script>
+</head>
+<style>
+    input::-webkit-input-placeholder {
+        /* placeholder颜色  */
+        color: #aab2bd;
+        /* placeholder字体大小  */
+        font-size: 12px;
+        /* placeholder位置  */
+        text-align: left;
+     }
+    .setspeed{
+        text-align: center;
+        width: 30px;
+    }
+</style>
+<body>
+<div id="navigation">
+    <input type="hidden" id="isManage" th:value="${currentUser.isSuperadmin}">
+    <input type="hidden" id="isStart" th:value="${userAcount.isStart}">
+    <input type="hidden" class="do_speed" th:value="${userAcount.spendSpeed}">
+    <div class="container-fluid"><a href="http://ad.shayingkj.com/index.php?e=adv/index.get_list#" id="brand"></a>
+        <ul class="main-nav">
+            <li class="active"><a href="javascript:;"> <i
+                    class="icon-home"></i> <span>我的首页</span> </a></li>
+            <li><a th:href="@{/pm/index}" data-toggle="dropdown" class="dropdown-toggle">
+                <i class="icon-edit"></i> <span>计划管理</span> <span class="caret"></span> </a></li>
+            <li><a th:href="@{/am/index}" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>广告管理</span> <span class="caret"></span> </a></li>
+            <li><a th:href="@{/user/acountSetting}" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>帐户设置</span> <span class="caret"></span> </a></li>
+            <!--<li><a href="http://ad.shayingkj.com/index.php?e=adv/apply.get_list" data-toggle="dropdown"
+                   class="dropdown-toggle"> <i class="icon-edit"></i> <span>审批申请</span> <span class="caret"></span> </a>
+            </li>
+            <li><a href="http://ad.shayingkj.com/index.php?e=adv/msg.get_list" data-toggle="dropdown"
+                   class="dropdown-toggle"> <i class="icon-edit"></i> <span>消息中心</span> <span class="caret"></span> </a>
+            </li>-->
+            <li>
+                <a th:href="@{/xgbg/index}"
+                   data-toggle="dropdown" class="dropdown-toggle"> <i class="icon-table"></i> <span>效果报告</span> <span
+                        class="caret"></span> </a></li>
+        </ul>
+        <div class="user">
+            <ul class="icon-nav">
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:20px;"
+                       th:text="${currentUser.userName}"></a>
+                </li>
+                <i class="icon-exit"></i>
+                <li class="dropdown" title="退出"><a th:href="@{/user/loginout}"> <i class="icon-exit"></i> </a></li>
+
+
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" id="content">
+    <link rel="stylesheet" th:href="@{/static/css/modal.css}" media="all" type="text/css">
+    <script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+    <script language="JavaScript" type="text/javascript" th:src="@{/static/js/leanmodal.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+    <div id="left">
+
+        <div class="subnav">
+            <div class="subnav-title">
+                <a href="http://ad.shayingkj.com/index.php?e=adv/index.get_list#"
+                   class="toggle-subnav"><i class="icon-angle-down"></i>
+                    <span>我的概况</span>
+                </a>
+            </div>
+            <!--<ul class="subnav-menu">
+                <li class="current"><a href="http://ad.shayingkj.com/index.php?e=adv/index.get_list"><i
+                        class="icon-6uc-ye"></i><span>我的概况</span></a></li>
+                <li><a href="http://ad.shayingkj.com/index.php?e=adv/account.get_list"><i
+                        class="icon-6uc-yen"></i><span>帐户设置</span></a></li>
+                <li><a href="http://ad.shayingkj.com/index.php?e=adv/apply.get_list"><i class="icon-6uc-shen"></i><span>审批申请</span></a>
+                </li>
+                <li><a href="http://ad.shayingkj.com/index.php?e=adv/msg.get_list"><i
+                        class="icon-6uc-message"></i><span>消息中心</span></a></li>
+            </ul>-->
+        </div>
+        <!--<div class="subnav">
+            <div class="subnav-title"><a href="http://ad.shayingkj.com/index.php?e=adv/index.get_list#"
+                                         class="toggle-subnav"><i class="icon-angle-down"></i><span>帮助</span></a></div>
+            <ul class="subnav-menu">
+                <li><a href="http://ad.shayingkj.com/index.php?e=index.article&amp;id=81" target="_blank">怎么发布广告？</a>
+                </li>
+                <li><a href="http://ad.shayingkj.com/index.php?e=index.article&amp;id=82" target="_blank">什么是广告计划？</a>
+                </li>
+                <li><a href="http://ad.shayingkj.com/index.php?e=index.article&amp;id=83" target="_blank">怎么在线充值？</a>
+                </li>
+
+            </ul>
+        </div>-->
+    </div>
+    <div id="main">
+        <input type="hidden" id="blanance" th:value="${userAcount.blanance}">
+        <table class="table-6uc" border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr class="first">
+                <td width="20%"><span class="money useMoney" th:text="${usemoney}">0.0</span>元</td>
+                <td width="20%"><span class="money">0.0</span>元</td>
+                <td width="20%"><span class="money">0.0</span>元</td>
+                <td width="20%">
+                    <span class="money blananceMoney" th:if="${userAcount != empty}" th:text="${blanance}"></span>
+                    <span class="money" th:if="${userAcount == empty}">0.00</span>元
+                </td>
+                <td width="20%">
+                    <button class="btn btn-red" id="startBtn" th:if="${currentUser.isSuperadmin == 1}">开始</button>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="border-top">当日消耗</span></td>
+                <td><span class="border-top">昨日消耗</span></td>
+                <td><span class="border-top">当月消耗</span></td>
+                <td><span class="border-top">账户余额</span></td>
+                <td>
+                    <input type="hidden" id="userAcountId" th:value="${userAcount.id}">
+                    <label th:if="${currentUser.isSuperadmin == 1}">当前用户:</label>
+                    <select style="z-index: 1;" id="selectUser" th:if="${currentUser.isSuperadmin == 1}" onchange="selectUser()">
+                        <option th:each="user,index:${userList}" th:value="${user.userId}"
+                                th:text="${user.userName}"
+                                th:selected="(${userAcount.userId} == ${user.userId})"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="last">
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>
+                    <span th:if="${currentUser.isSuperadmin == 1}"><input type="text" readonly="readonly" class="setspeed btn btn-red do_speed" placeholder="设置速率" th:value="${userAcount.spendSpeed}">元/秒<span style="font-size: 10px;">(？点击数字设置速率)</span></span>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-red" id="do_onlinepay" th:if="${currentUser.isSuperadmin == 1}">充值</button>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="box">
+
+            <div class="box-title">
+                <h3><i class="icon-table"></i>当日报表</h3>
+
+            </div>
+            <div class="box-content" style="min-height:20px;">
+                <table class="table table-hover table-nomargin">
+                    <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th width="120">CPC总量</th>
+                        <th width="120" class="hidden-350">结算</th>
+                        <th width="160" class="hidden-480">支出</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="box-title">
+                <h3><i class="icon-table"></i>报表总汇</h3>
+            </div>
+            <div class="box-content ai_report">
+                <ul>
+                    <li>
+                        <a href="http://ad.shayingkj.com/index.php?e=adv/report.get_list&amp;timerange=2018-10-1_2018-10-04">本月报告</a>
+                    </li>
+                    <li>
+                        <a href="http://ad.shayingkj.com/index.php?e=adv/report.get_list&amp;timerange=2018-9-1_2018-9-30">上个月报告</a>
+                    </li>
+                    <li>
+                        <a href="http://ad.shayingkj.com/index.php?e=adv/report.get_list&amp;timerange=2018-9-28_2018-10-04">最近一周报告</a>
+                    </li>
+                    <li>
+                        <a href="http://ad.shayingkj.com/index.php?e=adv/report.get_list&amp;timerange=2018-10-04_2018-10-04">今天报告</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="add_pay_form" style="display:none">
+        <!--<form method="post" onsubmit="return doPay()">-->
+            <!--<div class="txt-fld" style="height:60px">
+                <label for="" class="tit">网关</label>
+                <div style="float: left; margin-right:10px">
+                    <input type="radio" name="paytype" value="alipay" checked="">
+                    <img th:src="@{/static/images/alipay.gif}" width="120" height="45"></div>
+
+
+            </div>-->
+            <div class="txt-fld" id="to_username">
+                <label for="" class="tit">充值金额</label>
+                <input id="imoney" type="text" name="blanance"> 充值金额范围 <font style="color:#FF0000">100~100000000</font> 元
+            </div>
+
+            <div class="btn-fld">
+                <button onclick="submitForm()">提交 »</button>
+            </div>
+        <!--</form>-->
+    </div>
+
+    <script language="JavaScript" type="text/javascript">
+        $("#do_onlinepay").click(function () {
+            box.form("#add_pay_form", "充值账户余额", 'ot');
+        });
+    </script>
+</div>
+</body>
+</html>

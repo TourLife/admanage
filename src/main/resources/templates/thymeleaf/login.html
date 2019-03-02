@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<title ng-bind="oem.title"></title>
+<link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/static/css/base.css}">
+<link rel="stylesheet" th:href="@{/static/css/login.css}">
+<link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+<!--<link rel="icon" href="{{oem.iconUrl}}" type="image/x-icon">-->
+<script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/login.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    //相对路径
+    var path = /*[[@{/}]]*/;
+</script>
+<body th:style="'background-image: url('+@{/static/images/login.png}+');'">
+
+
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3 form-box">
+        <div class="form-box">
+            <div class="form-group logo-box">
+
+            </div>
+            <img width="300" height="100" ng-src="/images/logo6.png" th:src="@{/static/images/logo6.png}">
+
+            <div class="form-group">
+                <input type="text" placeholder="请输入用户名..." class="form-control user-input" name="username"
+                       id="username">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" id="password" placeholder="请输入密码..."
+                       class="form-control pwd-input">
+            </div>
+
+            <button class="btn btn-primary btn-login" onclick="login();">立即登录</button>
+        </div>
+        <div class="copyright"></div>
+
+    </div>
+</div>
+</body>
+</html>

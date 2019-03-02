@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.admanage.dao.UserAcountDao">
+    <resultMap id="userAcount" type="com.example.admanage.entity.UserAcount">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="blanance" property="blanance" />
+        <result column="use_money" property="useMoney" />
+        <result column="spend_speed" property="spendSpeed" />
+        <result column="is_start" property="isStart" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,user_id,blanance,use_money,spend_speed,is_start,create_time, update_time
+    </sql>
+
+    <select id="queryUserAcountBy2Date" resultMap="userAcount">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM  useracount WHERE update_time BETWEEN #{startDate} AND #{endDate}
+        <if test="userId != 1 ">
+            AND user_id = #{userId}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="queryUserAcountByCondition" resultType="com.example.admanage.entity.UserAcount">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM  useracount WHERE update_time BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <update id="updateUserAcount" parameterType="java.util.Map">
+        update useracount
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userAcount.userAcount.blanance != 0 ">blanance = #{userAcount.userAcount.blanance},</if>
+            <if test="userAcount.userAcount.useMoney != 0">use_money = #{userAcount.userAcount.useMoney},</if>
+            <if test="userAcount.userAcount.spendSpeed != 0">spend_speed = #{userAcount.userAcount.spendSpeed},</if>
+            <if test="userAcount.userAcount.isStart != null ">is_start = #{userAcount.userAcount.isStart},</if>
+            <if test="userAcount.userAcount.updateTime != null ">update_time = #{userAcount.userAcount.updateTime},</if>
+        </trim>
+        WHERE update_time BETWEEN #{userAcount.startTime} AND #{userAcount.endTime}
+        <if test="userAcount.userAcount.id != null ">
+            AND id = #{userAcount.userAcount.id}
+        </if>
+    </update>
+
+    <update id="batchUpdateUserAcount" parameterType="java.util.List">
+        update useracount
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="blanance =case" suffix="end,">
+                <foreach collection="userAcountList" item="item" index="index">
+                    when id=#{item.id} then #{item.blanance}
+                </foreach>
+            </trim>
+            <trim prefix="use_money =case" suffix="end,">
+                <foreach collection="userAcountList" item="item" index="index">
+                    when id=#{item.id} then #{item.useMoney}
+                </foreach>
+            </trim>
+            <trim prefix="is_start =case" suffix="end,">
+                <foreach collection="userAcountList" item="item" index="index">
+                    when id=#{item.id} then #{item.isStart}
+                </foreach>
+            </trim>
+            <trim prefix="update_time =case" suffix="end,">
+                <foreach collection="userAcountList" item="item" index="index">
+                    when id=#{item.id} then #{item.updateTime}
+                </foreach>
+            </trim>
+        </trim>
+        WHERE id IN
+        <foreach collection="userAcountList" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <insert id="inserteUserAcount" parameterType="java.util.List">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO useracount
+        (user_id,blanance,use_money,spend_speed,create_time,update_time)
+        VALUES (#{userId},#{blanance},#{useMoney},#{spendSpeed},#{createTime},#{updateTime})
+    </insert>
+
+    <insert id="batchInserteUserAcount" parameterType="java.util.List">
+        INSERT INTO useracount
+        (user_id,blanance,spend_speed,is_start,create_time,update_time)
+        VALUES
+        <foreach collection="userAcountList" item="item" index="index" separator="," >
+            (#{item.userId}, #{item.blanance}, #{item.spendSpeed},#{item.isStart}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+    </insert>
+</mapper>

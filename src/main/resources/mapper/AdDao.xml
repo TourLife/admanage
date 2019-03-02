@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.admanage.dao.AdManageDao">
+    <resultMap id="ad" type="com.example.admanage.entity.Ad">
+        <id column="ad_id" property="adId" />
+        <result column="ad_title" property="adTitle" />
+        <result column="plan_id" property="planId" />
+        <result column="plan_title" property="planTitle" />
+        <result column="ad_logo" property="adLogo" />
+        <result column="ad_type" property="adType" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        ad_id,ad_title,plan_id,plan_title,ad_logo,ad_type,status,create_time,update_time
+    </sql>
+
+    <select id="queryAdList" parameterType="java.util.Map" resultMap="ad">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM ad WHERE 1 = 1 AND<![CDATA[ status <> 2 ]]>
+        <if test="adType != null">
+           AND ad_type = #{adType}
+        </if>
+        <if test="planIdStr != null">
+            AND plan_id IN
+            <foreach collection="planIdStr" item="planid" index="index"
+                     open="(" close=")" separator=",">
+                '${planid}'
+            </foreach>
+        </if>
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="queryAd" resultType="com.example.admanage.entity.Ad">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM ad WHERE 1 = 1 AND<![CDATA[ status <> 2 ]]>
+        <if test=" adId != 0">
+            AND ad_id = #{adId}
+        </if>
+    </select>
+
+    <select id="addAd" parameterType="com.example.admanage.entity.Ad">
+        INSERT INTO ad(ad_title,plan_id,plan_title,ad_logo,ad_type,
+        status,create_time) values (#{adTitle},#{planId},
+        #{planTitle},#{adLogo},#{adType},#{status},#{createTime})
+    </select>
+
+    <select id="updateAd" parameterType="com.example.admanage.entity.Ad">
+        UPDATE ad
+        <trim prefix="set" suffixOverrides=",">
+            <if test="adTitle != null">ad_title=#{adTitle},</if>
+            <if test="planId != 0">plan_id=#{planId},</if>
+            <if test="planTitle != null">plan_title=#{planTitle},</if>
+            <if test="adLogo != null">ad_logo=#{adLogo},</if>
+            <if test="adType != null">ad_type=#{adType},</if>
+            <if test="status != 0">status=#{status},</if>
+            <if test="createTime != null">create_time=#{createTime},</if>
+        </trim>
+        WHERE ad_id = #{adId}
+    </select>
+</mapper>

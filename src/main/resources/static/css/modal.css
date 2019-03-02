@@ -1,0 +1,151 @@
+.modal {
+	z-index:101;
+	position: fixed;
+	top: 20%;
+	left: 50%; 
+	padding: 1px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
+}
+
+.modal-header {
+	padding: 8px 14px;
+	margin: 0;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 22px;
+	background-color: #f7f7f7;
+	border-bottom: 1px solid #ebebeb;
+	-webkit-border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+	height: 22px;
+}
+.modal_title {
+	float: left;
+}
+
+.modal_close {
+	float: right;
+	width: 20px;
+	height: 20px;
+	cursor:pointer;
+}
+
+.modal-body {
+	padding: 9px 14px;
+}
+
+.modal-body .text{
+	font-size: 14px;
+	text-align: center;
+	padding-top: 18px;
+	margin-bottom: 20px;
+}
+
+.modal-footer {
+	text-align: center;
+	padding: 8px 15px;
+}
+
+.modal-body .text .txt-fld {
+	padding: 14px 20px;
+	border-bottom: 1px solid #EEE;
+	position: relative;
+}
+
+.modal-body .text .txt-fld label {
+display: block;
+float: left;
+width: 90px;
+padding-top: 8px;
+color: #222;
+font-size: 12px;
+text-align: left;
+padding-right:20px;
+}
+
+.modal-body .text .txt-fld input[type="text"],.txt-fld input[type="password"] {
+width: 244px;
+padding: 8px;
+border-radius: 4px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+font-size: 1.2em;
+color: #222;
+background: #F7F7F7;
+font-family: "Helvetica Neue";
+outline: none;
+border-top: 1px solid #CCC;
+border-left: 1px solid #CCC;
+border-right: 1px solid #E7E6E6;
+border-bottom: 1px solid #E7E6E6;
+}
+
+.modal-body .text  .btn-fld {
+width: 254px;
+overflow: hidden;
+padding: 12px 10px 6px 130px;
+}
+
+.modal-body .text .btn-fld button {
+	width: auto;
+	color: #FFF;
+	background: #368ee0;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+	overflow: visible;
+	padding: 7px 24px;
+	border: none;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+}
+
+.f_error span.error ,.frc_error span.error{
+font-size: 11px;
+font-weight: 700;
+color: #C62626;
+padding-left:20px;
+ 
+}
+
+.modal-body .text .f_error  input[type="text"],.f_error  input[type="text"]  {
+color: #b94a48;
+border-color: #b94a48;
+}
+
+.modal-body #err span {
+padding-left:1px;
+}
+
+.modal-body .text .textarea_text{
+height:60px;
+}
+
+.st .f_error .error{
+display:block;
+float: right;
+ }
+ 
+#content_a_parent .error{
+display:block;
+margin-top:10px;
+padding-left: 1px;
+ }
+ 
+.modal-footer .btn {
+	color: #fff;
+	background: #a6bbd1;
+	margin: 0 10px
+}
+ 
+#modeal_ok {
+	background: #468ed8;
+}
+  

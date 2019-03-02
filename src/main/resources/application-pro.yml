@@ -1,0 +1,47 @@
+#tomacat端口，访问地址设置
+server:
+  port: 8686
+  servlet:
+    context-path: /adm
+
+#数据库访问连接，mybatis设置
+jdbc:
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://203.189.232.147:3306/admanage?useUnicode=true&characterEncoding=utf8&userSSL=false&autoReconnect=true
+  user: root
+  password: ggtftz2018
+
+mybatis_config_filePath: mybatis-config.xml
+mapper_path: /mapper/**.xml
+entity_package: com.example.admanage.entity
+
+#热部署设置
+spring:
+#thymeleaf模板引用
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+
+#freemarker模板引用
+  freemarker:
+    template-loader-path: classpath:/templates
+    cache: false
+    charset: UTF-8
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+    suffix: .ftl
+
+
+#静态js,css访问默认路径
+  mvc:
+    static-path-pattern: /static/**
+
+logging:
+  config: classpath:logback-spring.xml

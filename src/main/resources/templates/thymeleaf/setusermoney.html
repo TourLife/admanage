@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}">
+    <link rel="stylesheet" th:href="@{/static/css/laydate.css}" media="all" type="text/css">
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+    <title>广告投放投资</title>
+    <script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/highcharts.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/laydate.js}"></script>
+</head>
+<style>
+    table{
+        margin-top: 30px;
+    }
+    td input{
+        height: 30px;
+        border:1px solid #98bf21;
+        margin-top: 10px;
+    }
+    td:first-child {
+        text-align: right;
+    }
+    td:last-child {
+        text-align: left;
+    }
+    .laydate-box{
+        width:350px;
+    }
+    .container-fluid{
+        background: #fff;
+    }
+    .search{
+        width: 260px;
+        background: #b5b5b7;
+        height: 45px;
+        margin-top: 7px;
+        color: #fff;
+        border-radius: 5px;
+    }
+    .box{
+       background: #f7f7f7;
+       border: 0px;
+    }
+    .select-date{
+        height: 246px;
+    }
+    .select-date-header{
+        height: 45px;
+    }
+    .week-list{
+        height: 25px;
+    }
+    .week-list li{
+        height: 25px;
+        line-height: 25px;
+    }
+    .tabel-line{
+        height: 25px;
+        border: 0px;
+    }
+    .tabel-li{
+        height: 25px;
+        line-height: 25px;
+    }
+</style>
+<body>
+
+<div class="container-fluid" id="content">
+        <table cellpadding="0">
+            <tbody>
+            <tr>
+                <td width="40%">选择用户</td>
+                <td width="10%"></td>
+                <td width="50%">
+                    <select style="width: 150px;" class="user">
+                        <option th:each="user,index:${userList}" th:value="${user.userId}"
+                                th:text="${user.userName}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>设置消耗总金额</td>
+                <td></td>
+                <td>
+                    <input type="text" class="blanance">
+                </td>
+            </tr>
+            <tr>
+                <td>设置已经消耗金额</td>
+                <td></td>
+                <td>
+                    <input type="text" class="useMoney">
+                </td>
+            </tr>
+            <tr>
+                <td>设置消耗的日期</td>
+                <td></td>
+                <td>
+                    <div class="box" style="min-height: 30px;margin: 0px;">
+                        <div class="laydate-box">
+                            <input type="text" class="laydateInput startTime" placeholder="xxxx年xx月xx日" code-flag="start"/>
+                            <img th:src="@{/static/images/calendar.png}" alt="" class="icon data-icon" code-flag="start"/>
+                            <div class="select-date">
+                                <div class="select-date-header">
+                                    <ul class="heade-ul">
+                                        <li class="header-item header-item-one">
+                                            <select name="" id="yearList"></select>
+                                        </li>
+                                        <li class="header-item header-item-two" onselectstart="return false" style="width: 50px;">
+                                            <select name="" id="monthList"></select>
+                                        </li>
+                                        <li class="header-item header-item-three" onselectstart="return false">
+                                            <span class="reback">回到今天</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="select-date-body">
+                                    <ul class="week-list">
+                                        <li>日</li>
+                                        <li>一</li>
+                                        <li>二</li>
+                                        <li>三</li>
+                                        <li>四</li>
+                                        <li>五</li>
+                                        <li>六</li>
+                                    </ul>
+                                    <ul class="day-tabel"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr >
+                <td colspan="3" rowspan="3" style="text-align: center;">
+                    <button id="addUseMoney" class="search">提交</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+</div>
+<script type="text/javascript" th:inline = "javascript">
+
+    $(function(){
+        layui.use("layer", function () {
+            var layer = layui.layer;  //layer初始化
+        });
+        $("#addUseMoney").on("click",function(){
+            if(checkData()){
+                var userAcount = {
+                    userId:$(".user").val(),
+                    blanance:$(".blanance").val(),
+                    useMoney:$(".useMoney").val(),
+                    date:$(".startTime").val()
+                }
+                $.ajax({
+                    url:"addUserMoney",
+                    type:"post",
+                    data:userAcount,
+                    success:function (data) {
+                        if(data.Code == 0){
+                            layer.msg("设置成功！",{icon:1,time:1500},function(){
+                                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                                parent.layer.close(index);
+                            });
+                        }else{
+                            layer.msg("设置失败！",{icon:2,time:1500},function(){
+                                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                                parent.layer.close(index);
+                            });
+                        }
+                    },
+                    error:function () {
+                        layer.msg("设置失败！",{icon:2,time:1500},function(){
+                            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                            parent.layer.close(index);
+                        });
+                    }
+                })
+            }
+        })
+    });
+    function checkData() {
+       var blanance = $(".blanance").val();
+       var useMoney = $(".useMoney").val();
+       if(blanance == ""){
+           layer.msg("消费总金额不能为空！",{icon:2,time:1500});
+           return;
+       }else if(!isNumber(blanance)){
+           layer.msg("”消费总金额“请输入正确的数字",{icon:2,time:1500});
+           return;
+       }
+       if(useMoney == ""){
+            layer.msg("已经消费总金额不能为空！",{icon:2,time:1500});
+            return;
+       }else if(!isNumber(useMoney)){
+           layer.msg("”已经消费总金额“请输入正确的数字",{icon:2,time:1500});
+           return;
+       }
+       if(accSub(blanance,useMoney) < 0){
+           layer.msg("消费总金额不能小于已经消费的金额！",{icon:2,time:1500});
+           return;
+       }
+
+       return true;
+    }
+
+    function accSub(arg1, arg2) {
+        var r1, r2, m, n;
+        try {
+            r1 = arg1.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r1 = 0;
+        }
+        try {
+            r2 = arg2.toString().split(".")[1].length;
+        }
+        catch (e) {
+            r2 = 0;
+        }
+        m = Math.pow(1, Math.max(r1, r2)); //last modify by deeka //动态控制精度长度
+        n = (r1 >= r2) ? r1 : r2;
+        return ((arg1 * m - arg2 * m) / m).toFixed(2);
+    }
+
+    function isNumber(val){
+
+        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+        if(regPos.test(val) || regNeg.test(val)){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+</script>
+</div>
+</body>
+</html>

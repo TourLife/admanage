@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.admanage.dao.PlanDao">
+    <resultMap id="plan" type="com.example.admanage.entity.Plan">
+        <id column="plan_id" property="planId" />
+        <result column="plan_createId" property="planCreateId"/>
+        <result column="plan_createName" property="planCreateName"/>
+        <result column="plan_title" property="planTitle" />
+        <result column="plan_btype" property="planBtype" />
+        <result column="plan_price" property="planPrice" />
+        <result column="plan_maxprice" property="planMaxprice" />
+        <result column="plan_stype" property="planStype" />
+        <result column="plan_status" property="planStatus" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        plan_id,plan_createId,plan_createName,plan_title,plan_btype,plan_price,plan_maxprice,plan_stype,plan_logo,plan_status,create_time,update_time
+    </sql>
+
+    <select id="queryPlanList" parameterType="com.example.admanage.entity.Plan" resultMap="plan">
+        SELECT
+        plan_id,plan_createId,plan_createName,plan_title,plan_btype,plan_price,plan_maxprice,
+        pt.type_name as plan_stype,plan_logo,plan_status,create_time,update_time
+        FROM
+        plan LEFT JOIN plantype pt
+        ON plan_stype = pt.type_code
+        WHERE
+        1 = 1 AND plan_status = 0
+        <if test=" planStype != null">
+           AND plan_stype = #{planStype}
+        </if>
+        <if test=" planCreateId != 0">
+            AND plan_createId = #{planCreateId}
+        </if>
+        <if test=" planId != 0">
+            AND plan_id = #{planId}
+        </if>
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="queryPlan" resultType="com.example.admanage.entity.Plan">
+        SELECT
+        p.plan_id,p.plan_createId,u.user_name plan_createName,p.plan_title,p.plan_btype,p.plan_price,p.plan_maxprice,
+        p.plan_stype,p.plan_logo,p.plan_status,p.create_time,p.update_time
+        FROM plan p LEFT JOIN `user` u ON p.plan_createId = u.user_id WHERE 1 = 1
+        <if test=" planId != null">
+            AND p.plan_id = #{planId}
+        </if>
+    </select>
+
+    <select id="addPlan" parameterType="com.example.admanage.entity.Plan">
+        INSERT INTO plan(plan_createId,plan_createName,plan_title,plan_btype,plan_price,plan_maxprice,
+        plan_stype,plan_logo,plan_status,create_time) values (#{planCreateId},#{planCreateName},#{planTitle},#{planBtype},
+        #{planPrice},#{planMaxprice},#{planStype},#{planLogo},#{planStatus},#{createTime})
+    </select>
+
+    <select id="updatePlan" parameterType="com.example.admanage.entity.Plan">
+        UPDATE plan
+        <trim prefix="set" suffixOverrides=",">
+            <if test="planTitle != null">plan_title=#{planTitle},</if>
+            <if test="planBtype != null">plan_btype=#{planBtype},</if>
+            <if test="planPrice != 0">plan_price=#{planPrice},</if>
+            <if test="planMaxprice != 0">plan_maxprice=#{planMaxprice},</if>
+            <if test="planStype != null">plan_stype=#{planStype},</if>
+            <if test="planLogo != null">plan_logo=#{planLogo},</if>
+            <if test="planStatus != null">plan_status=#{planStatus},</if>
+            <if test="createTime != null">create_time=#{createTime},</if>
+        </trim>
+        WHERE plan_id = #{planId}
+    </select>
+</mapper>

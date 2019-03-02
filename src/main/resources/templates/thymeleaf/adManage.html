@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<title>广告主后台</title>
+<link rel="stylesheet" th:href="@{/static/css/style.css}">
+<link rel="stylesheet" th:href="@{/static/css/edit/edit.css}">
+<link type="text/css" th:href="@{/static/css/edit/iconfont.css}" rel="stylesheet">
+<link type="text/css" th:href="@{/static/css/pagination.css}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+<script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="application/javascript" th:src="@{/static/js/adManage.js}"></script>
+<script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
+</head>
+<style>
+    .plans{
+        border: 1px solid #ccc;
+        height: 145px;
+        width: 284px;
+        z-index: 1;
+        position: absolute;
+        top: 118px;
+        background: white;
+        overflow:auto;
+    }
+    .plans > li a{
+        display: inline-block;
+        width: 95%;
+        text-align: left;
+        font-size: 14px;
+        margin-left: 10px;
+    }
+</style>
+<body>
+<div id="navigation">
+    <div class="container-fluid"><a href="#" id="brand"></a>
+        <ul class="main-nav">
+            <li><a th:href="@{/user/index}"> <i class="icon-home"></i> <span>我的首页</span><span class="caret"></span> </a></li>
+            <li><a th:href="@{/pm/index}" data-toggle="dropdown" class="dropdown-toggle">
+                <i class="icon-edit"></i> <span>计划管理</span> <span class="caret"></span> </a></li>
+            <li class="active"><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>广告管理</span> <span class="caret"></span> </a></li>
+            <li><a th:href="@{/user/acountSetting}" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>帐户设置</span> <span class="caret"></span> </a></li>
+            <!--<li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>审批申请</span> <span class="caret"></span> </a></li>
+            <li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>消息中心</span> <span class="caret"></span> </a></li>-->
+            <li><a th:href="@{/xgbg/index}"
+                   data-toggle="dropdown" class="dropdown-toggle"> <i class="icon-table"></i> <span>效果报告</span> <span
+                    class="caret"></span> </a></li>
+        </ul>
+        <div class="user">
+            <ul class="icon-nav">
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:20px;"
+                       th:text="${currentUser.userName}"></a>
+                </li>
+                <i class="icon-exit"></i>
+                <li class="dropdown" title="退出"><a th:href="@{/user/loginout}"> <i class="icon-exit"></i> </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" id="content">
+
+    <div id="left">
+
+        <div class="subnav">
+            <div class="subnav-title"><a href="#" class="toggle-subnav"><i
+                    class="icon-angle-down"></i><span>所有推广计划</span></a></div>
+            <ul class="subnav-menu">
+                <li class="current"><a href="/index.php?e=adv/ad.get_list"><i class="icon-6uc-allplan"></i>
+                    <span>所有广告</span></a></li>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="main" style="padding-top:10px">
+        <div id="addlist">
+            <div class="mt30" style=" height:10px; ">
+                <a href="javascript:;" onclick="addOredit('add')" class="addad" th:if="${currentUser.isSuperadmin == 1}">新建广告</a>
+            </div>
+
+            <div class="box">
+                <div class="box-title">
+                    <h3><i class="icon-table"></i>广告列表</h3>
+                    <div class="actions" style="color: #08c;">
+                        <select size="1" name="choose_type" id="choose_type" style="margin-left:20px"
+                                onchange="queryPlanByTypeOrPlan()">
+                            <option value="00">所有类型</option>
+                            <option value="移动广告" th:selected="(${adtype} == '移动广告' )">移动广告</option>
+                            <option value="悬浮广告" th:selected="(${adtype} == '悬浮广告' )">悬浮广告</option>
+                        </select>
+                    </div>
+                    <div class="actions" style="color: #08c;">
+                        <select style="z-index: 1;"  id="selectPlan" onchange="queryPlanByTypeOrPlan()">
+                            <option value="0">所有计划</option>
+                            <option th:each="plan,index:${planlist}" th:value="${plan.planId}"
+                                    th:text="${plan.planTitle}"
+                                    th:selected="(${selectPlan} == ${plan.planId})"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="box-content">
+                    <table class="table plan_logo">
+                        <thead>
+                        <tr>
+                            <th width="50">ID</th>
+                            <th width="260">浏览</th>
+                            <!--<th>计划名称</th>-->
+                            <th>所属计划</th>
+                            <th>广告类型</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${#lists.isEmpty(adlist)}">
+                            <td colspan="7"><img th:src="@{/static/images/nodata.png}" height="480" width="990"/></td>
+                        </tr>
+                        <tr class="d_a" th:each="ad,iterStat : ${adlist}">
+                            <td align="left" style="padding:20px; padding-left:10px" th:text="${ad.adId}"></td>
+                            <td align="left" height="30">
+                                <p th:text="${ad.adTitle}" class="title" th:title="${ad.adTitle}"></p>
+                                <img th:src="|@{'/static/upload/'+${ad.adLogo}}|" width="350">
+                            </td>
+                            <!--<td th:text="${ad.adTitle}"></td>-->
+                            <td><a th:href="${ad.planTitle}" target="_blank" th:title="${ad.planTitle}" th:text="${ad.planTitle}" class="title"></a></td>
+                            <td th:text="${ad.adType}"></td>
+                            <td class="status" th:switch="${ad.status}">
+                                <span class="notification info_bg" th:case="0">活动</span>
+                                <span class="notification info_bg" th:case="1">未活动</span>
+                            </td>
+                            <td>
+                                <a href="javascript:;" th:onclick="|addOredit('edit',${ad.adId})|" th:if="${currentUser.isSuperadmin == 1}">编辑</a>
+                                <a href="javascript:;" th:onclick="|delAd(${ad.adId})|" th:if="${currentUser.isSuperadmin == 1}">删除</a>
+                                <a href="javascript:;" onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" style="color: #c1c1c1;" th:if="${currentUser.isSuperadmin != 1}">编辑</a>
+                                <a href="javascript:;" onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" style="color: #c1c1c1;" th:if="${currentUser.isSuperadmin != 1}">删除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 分页效果 -->
+                <input type="hidden" th:value="${page}" id="totalPage">
+                <input type="hidden" th:value="${currentUser.userId}" id="currentUserId">
+                <input type="hidden" th:value="${currentpage}" id="currentpage">
+                <div class="m-style page"></div>
+            </div>
+        </div>
+        <div id="addedit" style="display:none;">
+            <form action="update" method="POST" onsubmit="return paramValue()" enctype="multipart/form-data">
+                <input type="hidden" id="pid" name="planid" th:value="${selectPlan}">
+                <input type="hidden" id="adid" name="adid" >
+                <h2 class="action" style="margin-top: 20px;">编辑广告</h2>
+                <a href="index" class="back">
+                    <img th:src="@{/static/images/back.jpg}" width="50">
+                </a>
+                <div class="box">
+                    <div class="z-basic-a">
+                        <div class="box-content" style="position:relative">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                                   class="zone_form controls">
+                                <tbody>
+                                <tr>
+                                    <td width="200">广告名称</td>
+                                    <td><input type="text" id="adtitle" name="adtitle" class="input-27"
+                                               placeholder="请输入广告名称" value=""></td>
+                                </tr>
+                                <tr>
+                                    <td width="200">属于计划名称</td>
+                                    <td><input type="text" id="plantitle" readonly="readonly" name="plantitle" class="input-27"
+                                               placeholder="请选择一个计划" value="" onfocus="getPlan()">
+                                        <ul style="display:none;" id="plans" class="plans">
+                                            <li th:each="plan,iterStat : ${planlist}"  th:code="${plan.planId}" onclick="selectPlan(this)"><a href="javascript:;" th:text="${plan.planTitle}"></a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>广告类型</td>
+                                    <td><select name="adtype" id="adtype" style="padding:5px;  ">
+                                        <option value="">请选择</option>
+                                        <option value="移动广告">移动广告</option>
+                                        <option value="悬浮广告">悬浮广告</option>
+                                    </select>
+                                    </td>
+                                </tr>
+                                <tr class="add_div">
+                                    <td width="200">上传图片</td>
+                                    <td>
+                                        <span >
+                                            <input type="file" class="input-27" name="adlogo" id="logo">
+                                            <p style="display: none;">已上传头像<span  id="adlogo" style="color: blue;"></span></p>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="add_div">
+                                    <td width="200">是否活动</td>
+                                    <td>
+                                        <select name="status" id="status" style="padding:5px;  ">
+                                            <option value="0">活动</option>
+                                            <option value="1">未活动</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="z-next">
+                                <input type="submit" value="提交">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div></div>
+    </div>
+</div>
+</body>
+</html>

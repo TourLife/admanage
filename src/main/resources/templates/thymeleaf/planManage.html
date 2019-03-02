@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<link rel="stylesheet" th:href="@{/static/css/style.css}">
+<link rel="stylesheet" th:href="@{/static/layui/css/layui.css}">
+<link rel="stylesheet" th:href="@{/static/css/edit/edit.css}">
+<link type="text/css" th:href="@{/static/css/edit/iconfont.css}" rel="stylesheet">
+<link type="text/css" th:href="@{/static/css/pagination.css}" rel="stylesheet">
+<!--<link type="text/css" rel="stylesheet" th:href="@{/static/css/edit/build_plan.css}">-->
+<script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="application/javascript" th:src="@{/static/js/plan.js}"></script>
+<script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
+<title>广告投放投资</title>
+</head>
+<style>
+    .users{
+        border: 1px solid #ccc;
+        height: 145px;
+        width: 284px;
+        z-index: 1;
+        position: absolute;
+        top: 169px;
+        background: white;
+        overflow:auto;
+    }
+    .users > li a{
+        display: inline-block;
+        width: 95%;
+        text-align: left;
+        font-size: 14px;
+        margin-left: 10px;
+    }
+</style>
+<body>
+<div id="navigation">
+    <div class="container-fluid"><a href="#" id="brand"></a>
+        <ul class="main-nav">
+            <li><a th:href="@{/user/index}"> <i class="icon-home"></i> <span>我的首页</span><span class="caret"></span> </a></li>
+            <li class="active"><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle">
+                <i class="icon-edit"></i> <span>计划管理</span> <span class="caret"></span> </a></li>
+            <li><a th:href="@{/am/index}" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>广告管理</span> <span class="caret"></span> </a></li>
+            <li><a th:href="@{/user/acountSetting}" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>帐户设置</span> <span class="caret"></span> </a></li>
+            <!--<li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>审批申请</span> <span class="caret"></span> </a></li>
+            <li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
+                    class="icon-edit"></i> <span>消息中心</span> <span class="caret"></span> </a></li>-->
+            <li><a th:href="@{/xgbg/index}"
+                   data-toggle="dropdown" class="dropdown-toggle"> <i class="icon-table"></i> <span>效果报告</span> <span
+                    class="caret"></span> </a></li>
+        </ul>
+        <div class="user">
+            <ul class="icon-nav">
+                <li class="dropdown">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:20px;"
+                       th:text="${currentUser.userName}"></a>
+                </li>
+                <i class="icon-exit"></i>
+                <li class="dropdown" title="退出"><a th:href="@{/user/loginout}"> <i class="icon-exit"></i> </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" id="content">
+    <div id="left">
+        <div class="subnav">
+            <div class="subnav-title"><a href="#" class="toggle-subnav"><i class="icon-angle-down"></i><span>计费模式</span></a>
+            </div>
+            <ul class="subnav-menu">
+                <li class="current"><a href="/index.php?e=adv/plan.get_list"><i class="icon-6uc-allplan"></i>
+                    <span>所有计划</span></a></li>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="main" style="padding-top:10px">
+        <div id="planlist">
+            <div style=" height:10px; margin-top: 10px;">
+                <a href="javascript:;" onclick="addOredit('add')" class="addplan" th:if="${currentUser.isSuperadmin == 1}">新建计划</a>
+            </div>
+
+            <div class="box">
+                <div class="box-title">
+                    <h3><i class="icon-table"></i>计划列表</h3>
+                    <div class="actions" style="color: #08c;">
+                        <select name="choose_type" id="choose_type" style="margin-left:20px"
+                                onchange="queryPlanByTypeOrUser()">
+                            <option value="00">所有分类</option>
+                            <option th:each="planType,iterStat : ${planTypeList}" th:value="${planType.typeCode}"
+                                    th:text="${planType.typeName}"
+                                    th:selected="(${planStype} == ${planType.typeCode})"></option>
+                        </select>
+                    </div>
+                    <div class="actions" style="color: #08c;">
+                        <select style="z-index: 1;"  id="selectUser" onchange="queryPlanByTypeOrUser()" th:if="${currentUser.isSuperadmin == 1}">
+                            <option value="0">所有用户</option>
+                            <option th:each="user,index:${userList}" th:value="${user.userId}"
+                                    th:text="${user.userName}"
+                                    th:selected="(${selectUser} == ${user.userId})"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="box-content">
+                    <table class="table plan_logo">
+                        <thead>
+                        <tr>
+                            <th>计划LOGO</th>
+                            <th>计划名称</th>
+                            <th width="80">计费类型</th>
+                            <th width="90">单价</th>
+                            <th width="90">限额</th>
+                            <th width="90">分类</th>
+                            <th width="100">状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${#lists.isEmpty(planList)}">
+                            <td colspan="7"><img th:src="@{/static/images/nodata.png}" height="480" width="990"/></td>
+                        </tr>
+                        <tr class="d_a" th:each="plan,iterStat : ${planList}">
+                            <td>
+                                <a href="javascript:;" style="display: inline-block;" th:title="${plan.planTitle}">
+                                    <img th:src="|@{'/static/upload/'+${plan.planLogo}}|" width="100">
+                                </a>
+                            </td>
+                            </td>
+                            <td><a th:href="${plan.planTitle}" th:title="${plan.planTitle}"  th:text="${plan.planTitle}" class="planTitle" target="_blank"></a></td>
+                            <td th:text="${plan.planBtype}"></td>
+                            <td th:text="${plan.planPrice + '元'}"></td>
+                            <td th:text="${plan.planMaxprice  + '元'}"></td>
+                            <td class="status" th:text="${plan.planStype}"></td>
+                            <td class="status"><span class="notification error_bg" th:text="${plan.planStatus}"></span>
+                            </td>
+                            <td>
+                                <a href="javascript:;" th:onclick="|addOredit('edit',${plan.planId})|" th:if="${currentUser.isSuperadmin == 1}">编辑</a>
+                                <a th:href="@{/am/index?planId=}+${plan.planId}" th:if="${currentUser.isSuperadmin == 1}">查看广告</a>
+                                <a href="javascript:;" th:onclick="|delPlan(${plan.planId})|" th:if="${currentUser.isSuperadmin == 1}">删除计划</a>
+                            <a href="javascript:;" onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" th:if="${currentUser.isSuperadmin != 1}" style="color: #c1c1c1;">编辑</a>
+                            <a href="javascript:;" onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" th:if="${currentUser.isSuperadmin != 1}" style="color: #c1c1c1;">查看广告</a>
+                            <a href="javascript:;" onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" th:if="${currentUser.isSuperadmin != 1}" style="color: #c1c1c1;">删除计划</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 分页效果 -->
+                <input type="hidden" th:value="${page}" id="totalPage">
+                <input type="hidden" th:value="${currentUser.userId}" id="currentUserId">
+                <input type="hidden" th:value="${currentpage}" id="currentpage">
+                <div class="m-style page"></div>
+            </div>
+        </div>
+        <div id="planedit" style="display:none">
+            <form action="update" method="POST" onsubmit="return paramValue()" enctype="multipart/form-data">
+                <input type="hidden" id="plancreateid" name="plancreateid" th:value="${planCreateId}">
+                <h2 class="action">编辑计划</h2>
+                <a href="index" class="back">
+                    <img th:src="@{/static/images/back.jpg}" width="50">
+                </a>
+                <div class="box">
+                    <div class="z-basic-a">
+                        <div class="box-content" style="position:relative">
+                            <input type="hidden" name="planid" id="planid">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                                   class="zone_form controls">
+                                <tbody>
+                                <tr>
+                                    <td width="200">计划名称</td>
+                                    <td><input type="text" id="plantitle" name="plantitle" class="input-27"
+                                               placeholder="请输入计划名称" value=""></td>
+                                </tr>
+                                <tr>
+                                    <td>计费模式</td>
+                                    <td>
+                                        <select id="planbtype" name="planbtype" style="padding:5px;">
+                                            <option value="cpc">&nbsp;CPC&nbsp;</option>
+                                        </select></td>
+                                </tr>
+                                <tr>
+                                    <td>所属用户</td>
+                                    <td>
+                                        <input type="text" readonly="readonly" name="plancreatename" class="input-27" id="plancreatename" onclick="getUser()">
+                                        <ul style="display:none;" id="user" class="users">
+                                            <li th:each="user,iterStat : ${userList}"  th:code="${user.userId}" onclick="selectUser(this)"><a href="javascript:;" th:text="${user.userName}"></a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>计划广告分类</td>
+                                    <td>
+                                        <select name="planstyle" style="padding:5px;" id="planstype">
+                                            <option th:each="planType,iterStat : ${planTypeList}"
+                                                    th:value="${planType.typeCode}"
+                                                    th:text="${planType.typeName}"></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="price_d">
+                                    <td width="200" id="price_text5">广告出价</td>
+                                    <td><input name="planprice" type="text" class="input-27" id="planprice"
+                                               placeholder="投放1s付费金额，填写不小于0.2" value="">
+                                        <span id="price_text4"> 元</span></td>
+                                </tr>
+                                <tr>
+                                    <td>每日预算</td>
+                                    <td><input name="planmaxprice" type="text" class="input-27" id="planmaxprice"
+                                               placeholder="每天的消费金额上限,不填则不限，填写则必须高于100" value="">
+                                        元 <span class="helpsp"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>计划Logo</td>
+                                    <td><input type="file" class="input-27" name="planlogo">
+                                        <p style="display: none;">已上传头像<span  id="planlogo" style="color: blue;"></span></p>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <div class="z-next">
+                                <input type="submit" value="提交">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <div></div>
+    </div>
+</div>
+</body>
+</html>

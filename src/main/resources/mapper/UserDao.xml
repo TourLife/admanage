@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.admanage.dao.UserDao">
+    <sql id="Base_Column_List" >
+        user_id,user_name,user_password,is_superadmin,user_age,user_sex, create_time
+    </sql>
+
+    <select id="queryLogin" resultType="com.example.admanage.entity.User">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user WHERE user_name = #{loginName} AND user_password = #{password}
+    </select>
+
+    <select id="queryUser" resultType="com.example.admanage.entity.User">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user
+        WHERE 1=1
+        <if test="isAll != true">
+          AND is_superadmin = 0
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="queryUserByCondition" resultType="com.example.admanage.entity.User">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM  user WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertUser" keyProperty="userId" parameterType="com.example.admanage.entity.User">
+        INSERT INTO user
+        (user_name,user_age,user_sex,user_password,create_time)
+        VALUES (#{userName},#{userAge},#{userSex.sexCode},#{userPassword},#{createTime})
+    </insert>
+
+    <update id="updateUser" parameterType="com.example.admanage.entity.User">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userPassword != null">user_password = #{userPassword},</if>
+        </trim>
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteUser">
+        DELETE FROM USER
+        WHERE user_id = #{userId}
+    </delete>
+</mapper>
