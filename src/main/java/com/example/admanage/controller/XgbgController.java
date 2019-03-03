@@ -79,7 +79,7 @@ public class XgbgController extends BaseController {
             String[] dates = date.replaceAll(" ","").split("-");
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.YEAR,Integer.valueOf(dates[0]));
-            calendar.set(Calendar.WEEK_OF_MONTH,Integer.valueOf(dates[1]));
+            calendar.set(Calendar.MONTH,Integer.valueOf(dates[1])-1);
             calendar.set(Calendar.DAY_OF_MONTH,Integer.valueOf(dates[2]));
 
             userAcount.setCreateTime(calendar.getTime());
