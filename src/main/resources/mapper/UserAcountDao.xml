@@ -18,10 +18,33 @@
     <select id="queryUserAcountBy2Date" resultMap="userAcount">
         SELECT
         <include refid="Base_Column_List" />
-        FROM  useracount WHERE update_time BETWEEN #{startDate} AND #{endDate}
+        FROM  useracount WHERE 1 = 1
+        <if test="startDate!=null and startDate!=''">
+            <![CDATA[ AND update_time  >=  #{startDate}  ]]>
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            <![CDATA[ AND update_time <=  #{endDate}  ]]>
+        </if>
         <if test="userId != 1 ">
             AND user_id = #{userId}
         </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="queryUserSumAcountBy2Date" resultMap="userAcount">
+        SELECT
+        id,user_id,blanance,SUM(use_money) use_money,spend_speed,is_start,create_time, update_time
+        FROM  useracount WHERE 1 = 1
+        <if test="startDate!=null and startDate!=''">
+            <![CDATA[ AND update_time  >=  #{startDate}  ]]>
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            <![CDATA[ AND update_time <=  #{endDate}  ]]>
+        </if>
+        <if test="userId != null ">
+            AND user_id = #{userId}
+        </if>
+        GROUP BY user_id
         ORDER BY create_time DESC
     </select>
 

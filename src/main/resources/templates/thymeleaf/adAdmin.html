@@ -39,7 +39,7 @@
             <li><a th:href="@{/am/index}" data-toggle="dropdown" class="dropdown-toggle"> <i
                     class="icon-edit"></i> <span>广告管理</span> <span class="caret"></span> </a></li>
             <li><a th:href="@{/user/acountSetting}" data-toggle="dropdown" class="dropdown-toggle"> <i
-                    class="icon-edit"></i> <span>帐户设置</span> <span class="caret"></span> </a></li>
+                    class="icon-edit"></i> <span>账户设置</span> <span class="caret"></span> </a></li>
             <!--<li><a href="http://ad.shayingkj.com/index.php?e=adv/apply.get_list" data-toggle="dropdown"
                    class="dropdown-toggle"> <i class="icon-edit"></i> <span>审批申请</span> <span class="caret"></span> </a>
             </li>
@@ -110,8 +110,8 @@
             <tbody>
             <tr class="first">
                 <td width="20%"><span class="money useMoney" th:text="${usemoney}">0.0</span>元</td>
-                <td width="20%"><span class="money">0.0</span>元</td>
-                <td width="20%"><span class="money">0.0</span>元</td>
+                <td width="20%"><span class="money" th:text="${yesterday}">0.0</span>元</td>
+                <td width="20%"><span class="money" th:text="${currentMonth}">0.0</span>元</td>
                 <td width="20%">
                     <span class="money blananceMoney" th:if="${userAcount != empty}" th:text="${blanance}"></span>
                     <span class="money" th:if="${userAcount == empty}">0.00</span>元

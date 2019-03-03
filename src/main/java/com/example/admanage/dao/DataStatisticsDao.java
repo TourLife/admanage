@@ -20,5 +20,5 @@ public interface DataStatisticsDao {
     /**
      * 查询统计数据
      */
-    public List<DataStatistics> queryDataBy2Date(@Param("startDate") String startDate, @Param("endDate") String endDate);
+    public List<DataStatistics> queryDataBy2Date(@Param("startDate") String startDate, @Param("endDate") String endDate,@Param("userId") Integer userId);
 }

@@ -2,6 +2,7 @@ package com.example.admanage.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jdk.nashorn.internal.objects.annotations.Getter;
 
 import javax.validation.constraints.Min;
 import java.util.Date;
@@ -30,6 +31,9 @@ public class User {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , locale = "zh",timezone = "GMT+8")
     private Date createTime;
 
+    //删除标志（1，已删除 0 未删除）
+    private Integer delFlg;
+
     public User(){
 
     }
@@ -49,11 +53,11 @@ public class User {
         this.userSex = userSex;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -111,5 +115,13 @@ public class User {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getDelFlg() {
+        return delFlg;
+    }
+
+    public void setDelFlg(Integer delFlg) {
+        this.delFlg = delFlg;
     }
 }

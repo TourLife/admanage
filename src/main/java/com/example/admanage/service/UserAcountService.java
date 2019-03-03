@@ -7,6 +7,15 @@ import java.util.List;
 public interface UserAcountService {
 
     /**
+     * 根据时间查询用户账户余额总和
+     * @param startDate
+     * @param endDate
+     * @param userId
+     * @return num
+     */
+    public List<UserAcount> queryUserSumAcountBy2Date(String startDate, String endDate,Integer userId);
+
+    /**
      * 根据条件查询用户账户余额
      * @param startDate
      * @param endDate

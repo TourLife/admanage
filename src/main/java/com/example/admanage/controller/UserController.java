@@ -25,7 +25,9 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -68,15 +70,20 @@ public class UserController extends BaseController{
         String userId = request.getParameter("userId");
         UserAcount userAcount = new UserAcount();
 
-        String date = DateUtils.format(new Date(),"yyyy-MM-dd",Locale.CHINESE);
+        Date now = new Date();
+        String date = DateUtils.format(now,"yyyy-MM-dd",Locale.CHINESE);
         Integer uId = 0;
         if(StringUtils.isBlank(userId)){
             uId = user.getUserId();
         }else{
             uId = Integer.valueOf(userId);
         }
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+        calendar.add(calendar.DATE,1);
+        String tomorrow = DateUtils.format(calendar.getTime(),"yyyy-MM-dd",Locale.CHINESE);
         //获取今天设置的所有用户账号
-        List<UserAcount> userAcountList = userAcountService.queryUserAcountBy2Date(date+" 00:00:00",date+" 23:59:59",uId);
+        List<UserAcount> userAcountList = userAcountService.queryUserAcountBy2Date(date,tomorrow,uId);
         if(userAcountList != null && !userAcountList.isEmpty()){
             //如果是主账号只取第一个
             userAcount = userAcountList.get(0);
@@ -85,7 +92,7 @@ public class UserController extends BaseController{
             if( userAcount.getIsStart() == 0){
                 timeSpan = 0;
             }
-            Double usemoney = div((double)timeSpan,userAcount.getSpendSpeed(),1);
+            Double usemoney = multiply(timeSpan,userAcount.getSpendSpeed(),1);
             //随着时间变化余额变化情况
             Double blanance = sub(sub(userAcount.getBlanance(),usemoney),userAcount.getUseMoney());
             usemoney = add(userAcount.getUseMoney(), usemoney);
@@ -100,6 +107,33 @@ public class UserController extends BaseController{
             modelMap.put("usemoney",0.0);
             userAcount = new UserAcount(uId,0.0f,1.0f,0);
         }
+
+        //获取昨天消耗
+        calendar.add(calendar.DATE,-2);
+        String yesterday = DateUtils.format(calendar.getTime(),"yyyy-MM-dd",Locale.CHINESE);
+        List<UserAcount> yesterdayUse = userAcountService.queryUserSumAcountBy2Date(yesterday+" 00:00:00", date+" 00:00:00", userAcount.getUserId());
+        //获取当月消耗
+        //获取前月的第一天
+        calendar.add(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天
+        String firstDay = DateUtils.format(calendar.getTime(),"yyyy-MM-dd",Locale.CHINESE);
+        //获取前月的最后一天
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));//设置为1号,当前日期既为本月第一天
+        String lastDay = DateUtils.format(calendar.getTime(),"yyyy-MM-dd",Locale.CHINESE);
+        List<UserAcount> currentMonthUse = userAcountService.queryUserSumAcountBy2Date(firstDay+" 00:00:00", lastDay+" 00:00:00", userAcount.getUserId());
+
+        if(yesterdayUse != null && !yesterdayUse.isEmpty()){
+            modelMap.put("yesterday",yesterdayUse.get(0).getUseMoney());
+        }else {
+            modelMap.put("yesterday",0.0);
+        }
+
+        if(currentMonthUse != null && !currentMonthUse.isEmpty()){
+            modelMap.put("currentMonth",currentMonthUse.get(0).getUseMoney());
+        }else {
+            modelMap.put("currentMonth",0.0);
+        }
+
         //获取所有的用户(去除超管)
         List<User> userList = userService.queryUser(false);
         modelMap.put("userList",userList);
@@ -208,12 +242,9 @@ public class UserController extends BaseController{
 
     @RequestMapping("/updateUser")
     @ResponseBody
-    public JSONObject updateUser(String userName,String userId){
+    public JSONObject updateUser(User user){
         JSONObject result = CoreUtils.createResultJson(ResultType.SimpleResultType.OPERATE_ERROR,"修改失败","");
         try {
-            User user = new User();
-            user.setUserId(Integer.valueOf(userId));
-            user.setUserName(userName);
             int resultUser = userService.updateUser(user);
             if (resultUser == 1) {
                 result = CoreUtils.createResultJson(ResultType.SimpleResultType.SUCCESS, "修改成功", "");

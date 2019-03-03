@@ -10,6 +10,8 @@ public class DataStatistics {
 
     //自增主键
     private Integer Id;
+    //用户id
+    private Integer userId;
     //统计花费的金额
     private Float totalMoney;
     //消耗的时间
@@ -24,6 +26,14 @@ public class DataStatistics {
 
     public void setId(Integer id) {
         Id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Float getTotalMoney() {

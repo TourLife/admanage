@@ -23,13 +23,16 @@
         <if test="endDate!=null and endDate!=''">
             <![CDATA[ and spend_date <=  #{endDate}  ]]>
         </if>
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
         ORDER BY spend_date  ASC
     </select>
 
     <insert id="insertData" keyProperty="userId" parameterType="com.example.admanage.entity.User">
         INSERT INTO datastatistics
-        (total_money,spend_date,create_time)
-        VALUES (#{totalMoney},#{spendDate},#{createTime})
+        (user_id,total_money,spend_date,create_time)
+        VALUES (#{userId},#{totalMoney},#{spendDate},#{createTime})
     </insert>
 
     <update id="updateData" keyProperty="userId" parameterType="com.example.admanage.entity.User">

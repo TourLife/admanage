@@ -21,5 +21,5 @@ public interface DataStatisticsService {
     /**
      * 查询统计数据
      */
-    public List<DataStatistics> queryDataBy2Date(String startDate,String endDate);
+    public List<DataStatistics> queryDataBy2Date(String startDate,String endDate,Integer userId);
 }

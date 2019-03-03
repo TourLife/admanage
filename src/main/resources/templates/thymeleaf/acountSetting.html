@@ -29,12 +29,12 @@
         text-align: center;
     }
     .usersex{
-         display: inline-block;
-         width: 40px;
-         border: 0px;
-         /*background: url("/assets/img/caret.png") no-repeat scroll right center transparent;*/
-         text-align: center;
-     }
+        display: inline-block;
+        width: 40px;
+        border: 0px;
+        /*background: url("/assets/img/caret.png") no-repeat scroll right center transparent;*/
+        text-align: center;
+    }
     label{
         display:inline-block;
         width: 60px;
@@ -50,7 +50,7 @@
             <li><a th:href="@{/am/index}" data-toggle="dropdown" class="dropdown-toggle"> <i
                     class="icon-edit"></i> <span>广告管理</span> <span class="caret"></span> </a></li>
             <li class="active"><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
-                    class="icon-edit"></i> <span>帐户设置</span> <span class="caret"></span> </a></li>
+                    class="icon-edit"></i> <span>账户设置</span> <span class="caret"></span> </a></li>
             <!--<li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
                     class="icon-edit"></i> <span>审批申请</span> <span class="caret"></span> </a></li>
             <li><a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle"> <i
@@ -85,14 +85,14 @@
     <div id="main" style="padding-top:10px;">
         <div class="box">
 
-                <div class="box-content">
-                    <div class="box-title" style="margin-bottom: 40px;">
-                        <h3><i class="icon-new"></i>基本信息 <span
-                                style="font-size:14px; padding-left:30px; color:#08c; cursor:pointer"
-                                id="s_edit" th:if="${currentUser.isSuperadmin == 1}">新增用户</span></h3>
-                    </div>
-                    <form action="/update" method="POST">
-                        <table class="table">
+            <div class="box-content">
+                <div class="box-title" style="margin-bottom: 40px;">
+                    <h3><i class="icon-new"></i>基本信息 <span
+                            style="font-size:14px; padding-left:30px; color:#08c; cursor:pointer"
+                            id="s_edit" th:if="${currentUser.isSuperadmin == 1}">新增用户</span></h3>
+                </div>
+                <form action="/update" method="POST">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th width="50px">顺序</th>
@@ -121,65 +121,65 @@
                                 <input type="hidden" class="userid" th:value="${user.userId}">
                                 <a href="javascript:;" class="editBtn" th:if="${currentUser.isSuperadmin == 1}">编辑</a>
                                 <a href="javascript:;" style="color: #08c;" class="s_editpass" th:if="${currentUser.isSuperadmin == 1}">修改密码</a>
-                                <a href="javascript:;" style="color: #08c;" class="s_deluser" th:if="${currentUser.isSuperadmin == 1}">删除</a>
+                                <a href="javascript:;" style="color: #08c;" onclick="delUser(this)" th:if="${currentUser.isSuperadmin == 1}" delflg = "1">删除</a>
                                 <span onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" style="color: #c1c1c1;cursor: pointer;" th:if="${currentUser.isSuperadmin != 1}">编辑</span>
                                 <span onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" style="color: #c1c1c1;cursor: pointer;" th:if="${currentUser.isSuperadmin != 1}">修改密码</span>
                                 <span onclick="return layer.msg('您没有权限操作！',{icon:2,time:1000})" style="color: #c1c1c1;cursor: pointer;" th:if="${currentUser.isSuperadmin != 1}">删除</span>
                                 <div class="controls">
                                     <div class="s_password" style="display: none;">
-                                    <input type="hidden" th:value="${user.userName}" class="currentUser">
-                                    <p>
-                                        <span>原始密码</span>
-                                        <input type="text" name="oldpassword" th:value="${user.userPassword}" class="oldpassword" readonly="readonly" style="border:0px;">
-                                    </p>
-                                    <p>
-                                        <span>新密码</span>
-                                        <input type="password" name="password" class="password">
-                                    </p>
-                                    <p>
-                                        <span>确认新密码</span>
-                                        <input type="password" name="password_confirm" class="password_confirm">
-                                    </p>
-                                    <button type="button" class="btn btn-primary up_password"
-                                            style="margin-left:102px; margin-top:10px"> 提 交
-                                    </button>
-                                </div>
+                                        <input type="hidden" th:value="${user.userName}" class="currentUser">
+                                        <p>
+                                            <span>原始密码</span>
+                                            <input type="text" name="oldpassword" th:value="${user.userPassword}" class="oldpassword" readonly="readonly" style="border:0px;">
+                                        </p>
+                                        <p>
+                                            <span>新密码</span>
+                                            <input type="password" name="password" class="password">
+                                        </p>
+                                        <p>
+                                            <span>确认新密码</span>
+                                            <input type="password" name="password_confirm" class="password_confirm">
+                                        </p>
+                                        <button type="button" class="btn btn-primary up_password"
+                                                style="margin-left:102px; margin-top:10px"> 提 交
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                         </tbody>
                     </table>
+                </form>
+                <div id="newUser" style="display: none;">
+                    <a href="acountSetting" class="back" style="margin-top: -110px;">
+                        <img th:src="@{/static/images/back.jpg}" width="50">
+                    </a>
+                    <form action="addUser" method="post">
+                        <div class="control-group">
+                            <label class="control-label">用户名</label>
+                            <input type="text" name="userName" id="name" class="input-27" value="">
+                        </div>
+                        <div class="control-group" style="margin-top:10px;">
+                            <label class="control-label">年龄</label>
+                            <input type="text" name="userAge" id="age" class="input-27" value="" >
+                        </div>
+                        <div class="control-group" style="margin-top:10px;">
+                            <label class="control-label">性别</label>
+                            <select class="sex" name="userSex">
+                                <option value="0">男</option>
+                                <option value="1">女</option>
+                            </select>
+                        </div>
+                        <div class="control-group" style="margin-top:10px;">
+                            <label class="control-label">密码</label>
+                            <input type="password" name="userPassword" id="pwd" class="input-27" value="" >
+                        </div>
+                        <div class="z-next">
+                            <input type="submit" value="提交">
+                        </div>
                     </form>
-                    <div id="newUser" style="display: none;">
-                        <a href="acountSetting" class="back" style="margin-top: -110px;">
-                            <img th:src="@{/static/images/back.jpg}" width="50">
-                        </a>
-                        <form action="addUser" method="post">
-                            <div class="control-group">
-                                <label class="control-label">用户名</label>
-                                <input type="text" name="userName" id="name" class="input-27" value="">
-                            </div>
-                            <div class="control-group" style="margin-top:10px;">
-                                <label class="control-label">年龄</label>
-                                <input type="text" name="userAge" id="age" class="input-27" value="" >
-                            </div>
-                            <div class="control-group" style="margin-top:10px;">
-                                <label class="control-label">性别</label>
-                                <select class="sex" name="userSex">
-                                    <option value="0">男</option>
-                                    <option value="1">女</option>
-                                </select>
-                            </div>
-                            <div class="control-group" style="margin-top:10px;">
-                                <label class="control-label">密码</label>
-                                <input type="password" name="userPassword" id="pwd" class="input-27" value="" >
-                            </div>
-                            <div class="z-next">
-                                <input type="submit" value="提交">
-                            </div>
-                        </form>
-                    </div>
                 </div>
+            </div>
             <!-- 分页效果 -->
             <input type="hidden" th:value="${page}" id="totalPage">
             <input type="hidden" th:value="${currentpage}" id="currentpage">
@@ -209,7 +209,7 @@
                 $(this).parent().siblings().children(".userage").removeAttr("disabled");
                 //$(this).parent().siblings().children(".userage").prop("background");
                 $(this).removeClass("editBtn");
-                $(this).attr("onclick","save(this)");
+                $(this).attr("onclick","update(this)");
             });
 
             $('.s_editpass').on('click', function (option) {
@@ -218,6 +218,7 @@
                 }
                 $(this).siblings("div").children('.s_password').toggle();
             });
+
 
             $('.up_password').on('click', function (option) {
                 _this = this;
@@ -262,25 +263,28 @@
 
             });
         });
-        function save(obj){
+        function delUser(obj) {
+            layer.confirm("确定删除这个用户吗？",{icon:3},function () {
+                update(obj);
+            })
+        }
+        function update(obj){
             $.ajax({
                 url:"updateUser",
                 type:"post",
                 data:{
                     userName : $(obj).parent().siblings().children(".username").val(),
-                    userSex: $(obj).parent().siblings().children(".usersex").val(),
-                    userAge: $(obj).parent().siblings().children(".userage").val(),
-                    userId: $(obj).siblings(".userid").val()
+                    userId: $(obj).siblings(".userid").val(),
+                    delFlg:$(obj).attr("delflg")
                 },
                 success: function (data) {
-                    layer.msg("添加成功！", {icon: 1, time: 1000}, function () {
-                        $(obj).text("编辑");
-                        $(obj).parent().siblings().children(".username").attr("readonly", true);
-                        $(obj).parent().siblings().children(".username").css("border", "0");
-                        $(obj).parent().siblings().children(".userage").attr("readonly", true);
-                        $(obj).parent().siblings().children(".userage").css("border", "0");
-                        $(obj).addClass("editBtn");
-                        $(obj).removeAttr("onclick");
+                    var tip = "添加成功！";
+                    if($(obj).attr("delflg") == 1){
+                        tip = "删除成功！";
+                    }
+                    debugger;
+                    layer.msg(tip, {icon: 1, time: 1000}, function () {
+                        window.location.reload();
                     });
                 }
             });

@@ -101,6 +101,14 @@ public class BaseController {
         BigDecimal v2=BigDecimal.valueOf(num2);
         return v1.divide(v2,scale,BigDecimal.ROUND_HALF_UP).doubleValue();
     }
+    public static double multiply(double num1,double num2,int scale){
+        if (scale<0) {
+            throw new IllegalArgumentException("参数异常。。。");
+        }
+        BigDecimal v1 = BigDecimal.valueOf(num1);
+        BigDecimal v2 = BigDecimal.valueOf(num2);
+        return v1.multiply(v2).setScale(scale,BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
     public static double add(double num1,double num2){
         BigDecimal v1=BigDecimal.valueOf(num1);
         BigDecimal v2=BigDecimal.valueOf(num2);

@@ -10,6 +10,15 @@ import java.util.Map;
 public interface UserAcountDao {
 
     /**
+     * 根据条件查询用户账户余额总和
+     * @param startDate
+     * @param endDate
+     * @param userId
+     * @return num
+     */
+    public List<UserAcount> queryUserSumAcountBy2Date(@Param("startDate")String startDate, @Param("endDate")String endDate,@Param("userId")Integer userId);
+
+    /**
      * 根据条件查询用户账户余额
      * @param startDate
      * @param endDate

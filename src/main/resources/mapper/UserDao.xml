@@ -9,6 +9,7 @@
         SELECT
         <include refid="Base_Column_List" />
         FROM user WHERE user_name = #{loginName} AND user_password = #{password}
+        AND del_flg = 0
     </select>
 
     <select id="queryUser" resultType="com.example.admanage.entity.User">
@@ -19,6 +20,7 @@
         <if test="isAll != true">
           AND is_superadmin = 0
         </if>
+        AND del_flg = 0
         ORDER BY create_time DESC
     </select>
 
@@ -39,6 +41,7 @@
         <trim prefix="set" suffixOverrides=",">
             <if test="userName != null">user_name = #{userName},</if>
             <if test="userPassword != null">user_password = #{userPassword},</if>
+            <if test="delFlg != null">del_flg = #{delFlg}</if>
         </trim>
         WHERE user_id = #{userId}
     </update>

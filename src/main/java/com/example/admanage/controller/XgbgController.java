@@ -55,9 +55,10 @@ public class XgbgController extends BaseController {
     @PostMapping(value = "/dataStatistics")
     @ResponseBody
     public JSONObject userAcountStatistics(String startTime, String endTime){
+        User user = getLoginUserInfo();
         JSONObject result = CoreUtils.createResultJson(ResultType.SimpleResultType.OPERATE_ERROR,"失败","");
         String date = DateUtils.format(new Date(),"yyyy-MM-dd",Locale.CHINESE);
-        List<DataStatistics> dataStatisticsList = dataStatisticsService.queryDataBy2Date(startTime,endTime);
+        List<DataStatistics> dataStatisticsList = dataStatisticsService.queryDataBy2Date(startTime,endTime,user.getUserId());
         result = CoreUtils.createResultJson(ResultType.SimpleResultType.SUCCESS,"成功",dataStatisticsList);
         return result;
     }

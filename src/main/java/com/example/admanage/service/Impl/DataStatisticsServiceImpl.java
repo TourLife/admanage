@@ -31,7 +31,7 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
         return dataStatisticsDao.updateData(dataStatistics);
     }
 
-    public List<DataStatistics> queryDataBy2Date(String startDate,String endDate){
-        return dataStatisticsDao.queryDataBy2Date(startDate,endDate);
+    public List<DataStatistics> queryDataBy2Date(String startDate,String endDate,Integer userId){
+        return dataStatisticsDao.queryDataBy2Date(startDate,endDate,userId);
     }
 }

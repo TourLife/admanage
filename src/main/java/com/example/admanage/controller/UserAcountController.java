@@ -66,7 +66,7 @@ public class UserAcountController extends BaseController{
             }
             userAcount.setBlanance(blananceMoney);
             userAcount.setSpendSpeed(spendSpeed);
-            //userAcount.setUseMoney(useMoney);
+
             if ("false".equals(isUpdate)) {
                 userAcount.setCreateTime(new Date());
                 userAcount.setUpdateTime(new Date());
@@ -87,6 +87,7 @@ public class UserAcountController extends BaseController{
                 }
                 userAcount.setId(Integer.valueOf(userAcountId));
                 userAcount.setUpdateTime(new Date());
+                userAcount.setUseMoney(useMoney);
                 userAcountService.updateUserAcount(userAcount);
                 result = CoreUtils.createResultJson(ResultType.SimpleResultType.SUCCESS,"更新成功");
             }

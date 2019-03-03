@@ -17,6 +17,11 @@ public class UserAcountServiceImpl implements UserAcountService {
     private UserAcountDao userAcountDao;
 
     @Override
+    public List<UserAcount> queryUserSumAcountBy2Date(String startDate, String endDate, Integer userId) {
+        return userAcountDao.queryUserSumAcountBy2Date(startDate,endDate,userId);
+    }
+
+    @Override
     public List<UserAcount> queryUserAcountBy2Date(String startDate, String endDate,Integer userId){
         List<UserAcount> result = userAcountDao.queryUserAcountBy2Date(startDate+" 00:00:00",endDate+" 00:00:00",userId);
         return result;

@@ -69,13 +69,13 @@ public class DataStatisticsQuartz extends BaseController {
             today = this.endDate;
         }
         try {
-            List<UserAcount> userAcountList = userAcountService.queryUserAcountBy2Date(beforeOneDay, today, 1);
+            List<UserAcount> userAcountList = userAcountService.queryUserSumAcountBy2Date(beforeOneDay+" 00:00:00", today+" 00:00:00", null);
             if (userAcountList != null && !userAcountList.isEmpty()) {
                 //针对前一天充值的还没消费完的自动转入到今天
                 //1,获取前一天还没消费完的账户
                 List<UserAcount> insertUserAcountList = new ArrayList();
                 List<UserAcount> updateUserAcountList = new ArrayList();
-                List<UserAcount> dataStatisticsList = new ArrayList();
+                List<DataStatistics> dataStatisticsList = new ArrayList();
                 UserAcount insertUserAcount;
                 UserAcount updateUserAcount;
 
@@ -91,7 +91,7 @@ public class DataStatisticsQuartz extends BaseController {
                         insertUserAcount = new UserAcount();
                         updateUserAcount = new UserAcount();
                         Integer timeSpan = getSecondTimestamp(calendar.getTime()) - getSecondTimestamp(userAcountList.get(i).getUpdateTime()) ;
-                        Double usemoney = div((double)timeSpan,userAcountList.get(i).getSpendSpeed(),1);
+                        Double usemoney = multiply((double)timeSpan,userAcountList.get(i).getSpendSpeed(),1);
                         //随着时间变化余额变化情况
                         usemoney = add(userAcountList.get(i).getUseMoney(), usemoney);
                         if(usemoney < userAcountList.get(i).getBlanance()){
@@ -112,7 +112,25 @@ public class DataStatisticsQuartz extends BaseController {
                         updateUserAcount.setUpdateTime(calendar.getTime());
                         updateUserAcountList.add(updateUserAcount);
                     }
-                    dataStatistics.setTotalMoney(dataStatistics.getTotalMoney()+userAcountList.get(i).getUseMoney());
+                    dataStatistics.setTotalMoney(userAcountList.get(i).getUseMoney());
+                    dataStatistics.setUserId(userAcountList.get(i).getUserId());
+
+                    //统计数据并同步到数据库中 TODO
+                    logger.info("开始同步数据到统计表中！！！");
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    dataStatistics.setSpendDate(sdf.parse(beforeOneDay+" 00:00:00"));
+                    dataStatistics.setCreateTime(new Date());
+                    dataStatisticsList = dataStatisticsService.queryDataBy2Date(this.startDate+" 00:00:00",this.endDate+" 00:00:00",userAcountList.get(i).getUserId());
+                    if(dataStatisticsList != null && dataStatisticsList.size() > 0) {
+                        dataStatistics.setId(dataStatisticsList.get(0).getId());
+                        dataStatisticsService.updateData(dataStatistics);
+                    }else{
+                        if(StringUtils.isNotBlank(this.startDate)){
+                            sdf= new SimpleDateFormat("yyyy-MM-dd");
+                            dataStatistics.setSpendDate(sdf.parse(this.startDate));
+                        }
+                        dataStatisticsService.insertData(dataStatistics);
+                    }
                 }
                 //2，对这些账户进行批量更新
                 if(updateUserAcountList != null && !updateUserAcountList.isEmpty()) {
@@ -121,21 +139,6 @@ public class DataStatisticsQuartz extends BaseController {
                 //3,对未消费完的账户进行重新计算并批量插入到数据库中
                 if(insertUserAcountList != null && !insertUserAcountList.isEmpty()) {
                     userAcountService.batchInserteUserAcount(insertUserAcountList);
-                }
-                //统计数据并同步到数据库中 TODO
-                logger.info("开始同步数据到统计表中！！！");
-                dataStatistics.setSpendDate(calendar.getTime());
-                dataStatistics.setCreateTime(new Date());
-                List<DataStatistics> dataStatistics1 = dataStatisticsService.queryDataBy2Date(this.startDate+" 00:00:00",this.endDate+" 00:00:00");
-                if(dataStatistics1 != null && dataStatistics1.size() > 0) {
-                    dataStatistics.setId(dataStatistics1.get(0).getId());
-                    dataStatisticsService.updateData(dataStatistics);
-                }else{
-                    if(StringUtils.isNotBlank(this.startDate)){
-                        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-                        dataStatistics.setSpendDate(sdf.parse(this.startDate));
-                    }
-                    dataStatisticsService.insertData(dataStatistics);
                 }
             }
         }catch(Exception e){
