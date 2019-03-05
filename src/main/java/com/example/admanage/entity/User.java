@@ -38,10 +38,9 @@ public class User {
 
     }
 
-    public User(String userName, Integer userSex, Integer userAge, String userPassword,Date createTime) {
+    public User(String userName, Integer userSex, String userPassword,Date createTime) {
         this.userName = userName;
         this.userSex = userSex;
-        this.userAge = userAge;
         this.userPassword = userPassword;
         this.createTime = createTime;
     }

@@ -154,15 +154,15 @@
                     <a href="acountSetting" class="back" style="margin-top: -110px;">
                         <img th:src="@{/static/images/back.jpg}" width="50">
                     </a>
-                    <form action="addUser" method="post">
+                    <form action="addUser" method="post" onsubmit="return  checkData()">
                         <div class="control-group">
                             <label class="control-label">用户名</label>
-                            <input type="text" name="userName" id="name" class="input-27" value="">
+                            <input type="text" name="userName" id="name" class="input-27" value="" onblur="nameIsExit(this)">
                         </div>
-                        <div class="control-group" style="margin-top:10px;">
+                        <!--<div class="control-group" style="margin-top:10px;">
                             <label class="control-label">年龄</label>
                             <input type="text" name="userAge" id="age" class="input-27" value="" >
-                        </div>
+                        </div>-->
                         <div class="control-group" style="margin-top:10px;">
                             <label class="control-label">性别</label>
                             <select class="sex" name="userSex">
@@ -260,9 +260,23 @@
                             }
                         }
                     }});
-
             });
         });
+        function nameIsExit(obj){
+            $.ajax({
+                url:"nameIsExit",
+                type:"POST",
+                data:{"userName":$(obj).val()},
+                success:function(data){
+                    if (data.Code != 0) {
+                        layer.msg(data.Msg,{icon:2,time:1500})
+                        $(obj).attr("nameExit","true");
+                    }else{
+                        $(obj).attr("nameExit","false");
+                    }
+                }
+            })
+        }
         function delUser(obj) {
             layer.confirm("确定删除这个用户吗？",{icon:3},function () {
                 update(obj);
@@ -282,12 +296,26 @@
                     if($(obj).attr("delflg") == 1){
                         tip = "删除成功！";
                     }
-                    debugger;
                     layer.msg(tip, {icon: 1, time: 1000}, function () {
                         window.location.reload();
                     });
                 }
             });
+        }
+        function checkData(){
+            if($("#name").val() == null && $("#name").val() == ""){
+                layer.msg("登录名不能为空!",{icon:2,time:1500});
+                return false;
+            }else{
+                if($("#name").attr("nameExit") == "true" ){
+                    layer.msg("该登录名已经被占用!",{icon:2,time:1500});
+                    return false;
+                }
+            }
+            if($("#pwd").val() == null && $("#pwd").val() == ""){
+                layer.msg("密码不能为空!",{icon:2,time:1500});
+                return false;
+            }
         }
     </script>
 </div>

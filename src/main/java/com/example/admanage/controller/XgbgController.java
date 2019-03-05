@@ -10,6 +10,7 @@ import com.example.admanage.service.UserService;
 import com.example.admanage.utils.CoreUtils;
 import com.example.admanage.utils.DataStatisticsQuartz;
 import com.example.admanage.utils.ResultType;
+import com.example.admanage.utils.StringUtils;
 import freemarker.template.utility.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,24 +49,30 @@ public class XgbgController extends BaseController {
         if(user == null){
             return "thymeleaf/login";
         }
+        //获取所有的用户(去除超管)
+        List<User> userList = userService.queryUser(false);
+        modelMap.put("userList",userList);
         modelMap.put("currentUser",user);
         return "thymeleaf/xgbg";
     }
 
     @PostMapping(value = "/dataStatistics")
     @ResponseBody
-    public JSONObject userAcountStatistics(String startTime, String endTime){
+    public JSONObject userAcountStatistics(String startTime, String endTime,Integer userId){
         User user = getLoginUserInfo();
+        if(userId == null){
+            userId = user.getUserId();
+        }
         JSONObject result = CoreUtils.createResultJson(ResultType.SimpleResultType.OPERATE_ERROR,"失败","");
         String date = DateUtils.format(new Date(),"yyyy-MM-dd",Locale.CHINESE);
-        List<DataStatistics> dataStatisticsList = dataStatisticsService.queryDataBy2Date(startTime,endTime,user.getUserId());
+        List<DataStatistics> dataStatisticsList = dataStatisticsService.queryDataBy2Date(startTime,endTime,userId);
         result = CoreUtils.createResultJson(ResultType.SimpleResultType.SUCCESS,"成功",dataStatisticsList);
         return result;
     }
 
     @RequestMapping(value = "/setUserMoney")
     public String setUserMoney(ModelMap modelMap){
-        List<User> userList = userService.queryUser(true);
+        List<User> userList = userService.queryUser(false);
         modelMap.put("userList",userList);
         return "thymeleaf/setusermoney";
     }

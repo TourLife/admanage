@@ -132,7 +132,9 @@
                             <td th:text="${plan.planPrice + '元'}"></td>
                             <td th:text="${plan.planMaxprice  + '元'}"></td>
                             <td class="status" th:text="${plan.planStype}"></td>
-                            <td class="status"><span class="notification error_bg" th:text="${plan.planStatus}"></span>
+                            <td class="status" th:switch="${plan.planStatus}">
+                                <span class="notification info_bg" th:case="0">活动</span>
+                                <span class="notification info_bg" th:case="1">未活动</span>
                             </td>
                             <td>
                                 <a href="javascript:;" th:onclick="|addOredit('edit',${plan.planId})|" th:if="${currentUser.isSuperadmin == 1}">编辑</a>

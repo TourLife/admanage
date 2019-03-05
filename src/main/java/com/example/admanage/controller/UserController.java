@@ -170,7 +170,7 @@ public class UserController extends BaseController{
         String userSex = request.getParameter("userSex");
         String userAge = request.getParameter("userAge");
         String userPassword = request.getParameter("userPassword");
-        User user = new User(userName,Integer.valueOf(userSex),Integer.valueOf(userAge),userPassword,new Date());
+        User user = new User(userName,Integer.valueOf(userSex),userPassword,new Date());
         JSONObject result = addUserDeal(user);
         return "redirect:acountSetting";
     }
@@ -252,6 +252,18 @@ public class UserController extends BaseController{
             logger.info("更新用户信息成功！");
         }catch(Exception e){
             logger.info("更新用户信息失败！"+e.getStackTrace());
+        }
+        return result;
+    }
+    @RequestMapping(value = "nameIsExit")
+    @ResponseBody
+    public JSONObject nameIsExit(String userName){
+        JSONObject result = CoreUtils.createResultJson(ResultType.SimpleResultType.OPERATE_ERROR,"该登录名已经被占用！","");
+        User user = new User();
+        user.setUserName(userName);
+        user = userService.queryUserByCondition(user);
+        if(user == null){
+            result = CoreUtils.createResultJson(ResultType.SimpleResultType.SUCCESS,"","");
         }
         return result;
     }

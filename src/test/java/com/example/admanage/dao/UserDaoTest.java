@@ -23,7 +23,7 @@ public class UserDaoTest {
     @Test
     public void queryUser() throws Exception {
         List<User> userList = userDao.queryUser(true);
-        assertEquals(4,userList.size());
+        assertEquals(2,userList.size());
     }
 
     @Test

@@ -100,7 +100,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="report_menu_right" style="margin-right: 290px;">
+                <select style="z-index: 1;position: relative;left:405px;top:-10px;"  id="selectUser" th:if="${currentUser.isSuperadmin == 1}">
+                    <option th:each="user,index:${userList}" th:value="${user.userId}"
+                            th:text="${user.userName}"
+                            th:selected="(${selectUser} == ${user.userId})"></option>
+                </select>
+                <div class="report_menu_right" style="margin-right: 205px;">
                     <button class="search" id="search">查询</button>
                 </div>
 
@@ -197,7 +202,8 @@
             type:"post",
             data:{
                 "startTime":start,
-                "endTime":end
+                "endTime":end,
+                "userId":$("#selectUser").val()
             },
             dataType:"json",
             success:function (res) {

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.admanage.dao.UserDao">
     <sql id="Base_Column_List" >
-        user_id,user_name,user_password,is_superadmin,user_age,user_sex, create_time
+        user_id,user_name,user_password,is_superadmin,user_age,user_sex, create_time,del_flg
     </sql>
 
     <select id="queryLogin" resultType="com.example.admanage.entity.User">
@@ -27,7 +27,14 @@
     <select id="queryUserByCondition" resultType="com.example.admanage.entity.User">
         SELECT
         <include refid="Base_Column_List" />
-        FROM  user WHERE user_id = #{userId}
+        FROM  user WHERE 1 = 1
+        <if test="userName != null">
+            AND user_name = #{userName}
+        </if>
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+        AND del_flg = 0
     </select>
 
     <insert id="insertUser" keyProperty="userId" parameterType="com.example.admanage.entity.User">
