@@ -35,7 +35,7 @@ public class Plan {
 
     public Plan(){}
 
-    public Plan(Integer planCreateId,String planCreateName,String planTitle,String planBtype,String planStype,float planPrice,float planMaxprice){
+    public Plan(Integer planCreateId,String planCreateName,String planTitle,String planBtype,String planStype,float planPrice,float planMaxprice,int planStatus){
         this.planCreateId = planCreateId;
         this.planCreateName = planCreateName;
         this.planTitle = planTitle;
@@ -43,6 +43,7 @@ public class Plan {
         this.planStype = planStype;
         this.planPrice = planPrice;
         this.planMaxprice = planMaxprice;
+        this.planStatus = planStatus;
     }
 
     public int getPlanCreateId() {

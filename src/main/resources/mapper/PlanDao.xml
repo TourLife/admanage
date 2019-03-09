@@ -27,7 +27,7 @@
         plan LEFT JOIN plantype pt
         ON plan_stype = pt.type_code
         WHERE
-        1 = 1 AND plan_status = 0
+        1 = 1 AND plan_status != 2
         <if test=" planStype != null">
            AND plan_stype = #{planStype}
         </if>

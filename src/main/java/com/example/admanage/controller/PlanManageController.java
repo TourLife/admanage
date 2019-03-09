@@ -89,8 +89,9 @@ public class PlanManageController extends BaseController{
         String planStyle = request.getParameter("planstyle");
         String planPrice = request.getParameter("planprice");
         String planMaxprice = request.getParameter("planmaxprice");
+        String planStatus = request.getParameter("status");
         String result = handleFileUpload(planlogos);
-        Plan plan = new Plan(Integer.valueOf(planCreateId),planCreateName,planTitle,planBtype,planStyle,Float.valueOf(planPrice),Float.valueOf(planMaxprice));
+        Plan plan = new Plan(Integer.valueOf(planCreateId),planCreateName,planTitle,planBtype,planStyle,Float.valueOf(planPrice),Float.valueOf(planMaxprice),Integer.valueOf(planStatus));
         if(!"fail".equalsIgnoreCase(result)){
             plan.setPlanLogo(result);
         }
@@ -112,7 +113,7 @@ public class PlanManageController extends BaseController{
         Plan plan = new Plan();
         if(StringUtils.isNotBlank(planId)){
             plan.setPlanId(Integer.valueOf(planId));
-            plan.setPlanStatus(1);
+            plan.setPlanStatus(2);
             planService.updatePlan(plan);
         }
         return "redirect:index";
