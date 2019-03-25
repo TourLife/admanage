@@ -97,7 +97,7 @@ public class XgbgController extends BaseController {
                 //立马执行定时任务
                 Calendar endCalendar = Calendar.getInstance();
                 endCalendar.set(Calendar.YEAR,Integer.valueOf(dates[0]));
-                endCalendar.set(Calendar.WEEK_OF_MONTH,Integer.valueOf(dates[1]));
+                endCalendar.set(Calendar.MONTH,Integer.valueOf(dates[1])-1);
                 endCalendar.set(Calendar.DAY_OF_MONTH,Integer.valueOf(dates[2])+1);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 dataStatisticsQuartz.setStartDate(sdf.format(calendar.getTime()));
