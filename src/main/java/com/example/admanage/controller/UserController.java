@@ -92,7 +92,16 @@ public class UserController extends BaseController{
             if( userAcount.getIsStart() == 0){
                 timeSpan = 0;
             }
+            //获取当前跑动账号的余额与时间之间的兑换
             Double usemoney = multiply(timeSpan,userAcount.getSpendSpeed(),1);
+            //获取当日消耗
+            List<UserAcount> todayUse = userAcountService.queryUserSumAcountBy2Date(date+" 00:00:00", tomorrow+" 00:00:00", userAcount.getUserId());
+            if(todayUse != null && !todayUse.isEmpty()){
+                Double todayUseMoney = add(todayUse.get(0).getUseMoney(), usemoney);
+                modelMap.put("todayuse",changeDecimal(todayUseMoney,1));
+            }else {
+                modelMap.put("todayuse",0.0);
+            }
             //随着时间变化余额变化情况
             Double blanance = sub(sub(userAcount.getBlanance(),usemoney),userAcount.getUseMoney());
             usemoney = add(userAcount.getUseMoney(), usemoney);
@@ -103,6 +112,13 @@ public class UserController extends BaseController{
             modelMap.put("blanance",changeDecimal(blanance,1));
             modelMap.put("usemoney",changeDecimal(usemoney,1));
         }else{
+            //获取今天消耗
+            List<UserAcount> todayUse = userAcountService.queryUserSumAcountBy2Date(date+" 00:00:00", tomorrow+" 00:00:00", userAcount.getUserId());
+            if(todayUse != null && !todayUse.isEmpty()){
+                modelMap.put("todayuse",changeDecimal(todayUse.get(0).getUseMoney(),1));
+            }else {
+                modelMap.put("todayuse",0.0);
+            }
             modelMap.put("blanance",0.0);
             modelMap.put("usemoney",0.0);
             userAcount = new UserAcount(uId,0.0f,1.0f,0);
