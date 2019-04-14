@@ -22,16 +22,16 @@ $(function(){
     //开始or停止
     $("#startBtn").click(function(){
         if($(".blananceMoney").text() > 0){
-            updateAcount(true);
+            updateAcount(true,false);
         }else{
             layer.msg("余额不足，请先充值！",{icon:2,time:1000})
         }
     });
     if($("#isStart").val() == 1){
-        updateAcount(true);
+        updateAcount(true,false);
     }
 });
-function updateAcount(cammnd){
+function updateAcount(cammnd,isStop){
     var spendSpeed = $(".do_speed").val();
     var blananceMoney = $(".blananceMoney").text();
     var useMoney = $(".useMoney").text();
@@ -64,10 +64,10 @@ function updateAcount(cammnd){
         },
         dataType:"json",
         success:function(data){
-            if(cammnd == true){
+            if(cammnd == true && isStop == false){
                 countDown();
             }else{
-                $(".useMoney").text(0);
+                //$(".useMoney").text(0);
                 var res = data.Data;
                 $("#userAcountId").val(res.id);
             }
@@ -98,7 +98,7 @@ function countDown(){
         $(".blananceMoney").text((blananceMoney));
         $(".useMoney").text((useMoney));
         if(blananceMoney <= 0) {
-            updateAcount(true);
+            updateAcount(true,true);
         }
 
     },1000);
@@ -121,7 +121,7 @@ function submitForm(){
         }else{
             $("#blanance").val(m);
             $(".blananceMoney").text($("#imoney").val());
-            updateAcount(false);
+            updateAcount(false,false);
         }
         //关闭弹窗
         box._hide();
